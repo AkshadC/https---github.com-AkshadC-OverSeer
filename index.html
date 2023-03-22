@@ -241,10 +241,18 @@
             var adminName;
             var database = firebase.database();
 
+
+
+
+
             database.ref("Admins").orderByChild("EmailID").equalTo(TO).once("value").then(function(snapshot) {
               snapshot.forEach(function(childSnapshot) {
               adminName = childSnapshot.key;
-              var path = "Admins/"+adminName+"/FirstName";
+
+              const nameRef = database.ref('Admins/'+adminName);
+              nameRef.once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                  var path = "Admins/"+adminName+"/FirstName";
               var dbRef = firebase.database().ref(path);
               
               dbRef.once("value").then(function(snapshot1) {
@@ -265,9 +273,14 @@
               }).then(
                 showAlert("OTP SENT TO: "+TO ,"success","","Success!","#AAFF00")
               );
+                } else {
+                  showAlert("Invalid Email, Please Try Again" ,"success","","Success!","#AAFF00")
+                }
+              });
+             
               });
           }).catch(function(error) {
-            showAlert("Invalid Email, Please Try Again" ,"success","","Success!","#AAFF00")
+            
           });
           
           
