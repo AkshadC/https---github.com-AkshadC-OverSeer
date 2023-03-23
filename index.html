@@ -39,6 +39,7 @@
     <meta property="og:type" content="website">
     <link rel="canonical" href="/">
     <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
   <script src="firebase_js_config.js"></script>
 
   <script
@@ -229,62 +230,13 @@
           </div>
         </div>
       </div>
-      <script src="https://smtpjs.com/v3/smtp.js">
+      
+      <script>
+        
       </script>
       <script>
-        let otp = Math.floor(100000 + Math.random() * 900000);
-      </script>
-      <script>
 
-        function AsendOtp(){ 
-            var TO = document.getElementById("name-2b50").value;
-            var adminName;
-            var database = firebase.database();
-
-
-
-
-
-            database.ref("Admins").orderByChild("EmailID").equalTo(TO).once("value").then(function(snapshot) {
-              snapshot.forEach(function(childSnapshot) {
-              adminName = childSnapshot.key;
-
-              const nameRef = database.ref('Admins/'+adminName);
-              nameRef.once('value', (snapshot) => {
-                if (snapshot.exists()) {
-                  var path = "Admins/"+adminName+"/FirstName";
-              var dbRef = firebase.database().ref(path);
-              
-              dbRef.once("value").then(function(snapshot1) {
-                  var name = snapshot1.val();
-                  localStorage.setItem('AuserName', name);
-                }).catch(function(error) {
-                  console.error(error);
-                });
-
-              Email.send({
-              Host : "smtp.elasticemail.com",
-              Username : "akshadclg@gmail.com",
-              Password : "546777A00214ED311839906610D4BDBAE1D8",
-              To : TO,
-              From : "akshadclg@gmail.com",
-              Subject : "Your OveerSeer Login OTP",
-              Body : "The OTP is: " + otp
-              }).then(
-                showAlert("OTP SENT TO: "+TO ,"success","","Success!","#AAFF00")
-              );
-                } else {
-                  showAlert("Invalid Email, Please Try Again" ,"success","","Success!","#AAFF00")
-                }
-              });
-             
-              });
-          }).catch(function(error) {
-            
-          });
-          
-          
-        }
+        
          
         
       function FsendOtp(){
@@ -319,40 +271,7 @@
             console.error(error);
           });
     }
-        function adminVerifyOTP(){
-          
-          
-          var recOTP = document.getElementById("email-2b50").value;
-          var emailID = document.getElementById("name-2b50").value;
-          
-      
-          if(Number(otp) == Number(recOTP)){
-
-            window.location.href = "Admin_Login.html";
-          }
-          else{
-            showAlert("Invalid OTP, Please Try again","error","","Oops!","#FF2E2E");
-            
-            
-            document.getElementById("name-2b50").value=emailID;
-            document.getElementById("email-2b50").value="";
-          }
-        }
-        function teacherVerifyOTP(){
-          var recOTP = document.getElementById("email-F").value;
-          var emailID = document.getElementById("name-F").value;
-          localStorage.setItem('userName', emailID);
-  
-          if(Number(otp) == Number(recOTP)){
-            window.location.href = "Teacher_Login.html";
-          }
-          else{
-            showAlert("Invalid OTP, Please Try again","error","","Oops!","#FF2E2E");
         
-            document.getElementById("name-F").value=emailID;
-            document.getElementById("email-F").value="";
-          }
-        }
 
       </script>
     </section>

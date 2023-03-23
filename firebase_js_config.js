@@ -128,12 +128,12 @@ function enrollStudent() {
 
   var address = street + " " + zipCode + " " + city + " " + country + " ";
 
-  var studentPath = "Students/"+dept+"/"+year+"/"+div;
-  var counterpath = "StudentsCounter/"+dept+"/"+year+"/"+div;
+  var studentPath = "Students/" + dept + "/" + year + "/" + div;
+  var counterpath = "StudentsCounter/" + dept + "/" + year + "/" + div;
   var student = firebase.database().ref(studentPath);
   var counter = firebase.database().ref(counterpath);
-  
-  counter.transaction(function (currentValue){
+
+  counter.transaction(function (currentValue) {
     return (currentValue || 0) + 1;
   }, function (error, committed, snapshot) {
     if (error) {
@@ -142,27 +142,27 @@ function enrollStudent() {
       console.log("Transaction aborted because the counter location is null.");
     } else {
       var newCounterValue = snapshot.val();
-      var rollNo = "S"+newCounterValue;
+      var rollNo = "S" + newCounterValue;
       var newStudentRef = student.child(rollNo);
       const stud = {
-        RollNo:rollNo,
-        FirstName:firstName,
-        LastName:lastName,
+        RollNo: rollNo,
+        FirstName: firstName,
+        LastName: lastName,
         emailID: emailID,
         age: age,
         DOB: DOB,
         phoneNo: phoneNo,
         dept: dept,
         address: address,
-        Div:div
+        Div: div
       };
       newStudentRef.set(stud);
       var msg = "NEW STUDENT ADDED SUCCESSFULLY WITH ROLL NO " + "(" + "S" + newCounterValue + ")!!";
       showAlert(msg, "success", "Admin_Login.html", "Sucess", "#AAFF00");
 
-  }
+    }
 
-});
+  });
 }
 function enrollStudentFromTeacher() {
   var firstName = document.getElementById("Fname-49a7").value;
@@ -191,12 +191,12 @@ function enrollStudentFromTeacher() {
 
   var address = street + " " + zipCode + " " + city + " " + country + " ";
 
-  var studentPath = "Students/"+dept+"/"+year+"/"+div;
-  var counterpath = "StudentsCounter/"+dept+"/"+year+"/"+div;
+  var studentPath = "Students/" + dept + "/" + year + "/" + div;
+  var counterpath = "StudentsCounter/" + dept + "/" + year + "/" + div;
   var student = firebase.database().ref(studentPath);
   var counter = firebase.database().ref(counterpath);
-  
-  counter.transaction(function (currentValue){
+
+  counter.transaction(function (currentValue) {
     return (currentValue || 0) + 1;
   }, function (error, committed, snapshot) {
     if (error) {
@@ -205,39 +205,90 @@ function enrollStudentFromTeacher() {
       console.log("Transaction aborted because the counter location is null.");
     } else {
       var newCounterValue = snapshot.val();
-      var rollNo = "S"+newCounterValue;
+      var rollNo = "S" + newCounterValue;
       var newStudentRef = student.child(rollNo);
       const stud = {
-        RollNo:rollNo,
-        FirstName:firstName,
-        LastName:lastName,
+        RollNo: rollNo,
+        FirstName: firstName,
+        LastName: lastName,
         emailID: emailID,
         age: age,
         DOB: DOB,
         phoneNo: phoneNo,
         dept: dept,
         address: address,
-        Div:div
+        Div: div
       };
       newStudentRef.set(stud);
       var msg = "NEW STUDENT ADDED SUCCESSFULLY WITH ROLL NO " + "(" + "S" + newCounterValue + ")!!";
       showAlert(msg, "success", "Teacher_login.html", "Sucess", "#AAFF00");
 
-  }
+    }
 
+  });
+}
+
+let otp = Math.floor(100000 + Math.random() * 900000);
+
+function AsendOtp() {
+  var TO = document.getElementById("name-2b50").value;
+  var database = firebase.database();
+  database.ref("Admins").orderByChild("EmailID").equalTo(TO).once("value").then(function (snapshot) {
+    if (snapshot.exists()) {
+      snapshot.forEach(function (childSnapshot) {
+        var adminName = childSnapshot.key;
+        var path = "Admins/" + adminName + "/FirstName";
+        var dbRef = firebase.database().ref(path);
+        dbRef.once("value").then(function (snapshot1) {
+          var name = snapshot1.val();
+          console.log(name);
+          localStorage.setItem('AuserName', name);
+        }).catch(function (error) {
+          console.error(error);
+        });
+        Email.send({
+          Host: "smtp.elasticemail.com",
+          Username: "akshadclg@gmail.com",
+          Password: "546777A00214ED311839906610D4BDBAE1D8",
+          To: TO,
+          From: "akshadclg@gmail.com",
+          Subject: "Your OveerSeer Login OTP",
+          Body: "The OTP is: " + otp
+        }).then(
+          showAlert("OTP SENT TO: " + TO, "success", "", "Success!", "#AAFF00")
+        );
+      });
+    }
+    else {
+      showAlert("Invalid EMAIL ID , Please Try again", "error", "", "Oops!", "#FF2E2E");
+    }
 });
 }
-function checkEmail(emailId){
-  var database = firebase.database();
-  database.ref("Admins").orderByChild("EmailID").equalTo(emailId).once("value").then(function(snapshot) {
-    // Loop through the results and log the keys
-    snapshot.forEach(function(childSnapshot) {
-      var key = childSnapshot.key;
-      console.log("Value is present at key:", key);
-      showAlert("OTP SENT TO: "+emailId ,"success","","Success!","#AAFF00")
-      return true;
-    });
-  }).catch(function(error) {
-    console.error(error);
-  });
+function adminVerifyOTP() {
+  var recOTP = document.getElementById("email-2b50").value;
+  var emailID = document.getElementById("name-2b50").value;
+  if (Number(otp) == Number(recOTP)) {
+    window.location.href = "Admin_Login.html";
+  }
+  else {
+    showAlert("Invalid OTP, Please Try again", "error", "", "Oops!", "#FF2E2E");
+    document.getElementById("name-2b50").value = emailID;
+    document.getElementById("email-2b50").value = "";
+  }
+}
+
+function teacherVerifyOTP() {
+  var recOTP = document.getElementById("email-F").value;
+  var emailID = document.getElementById("name-F").value;
+  localStorage.setItem('userName', emailID);
+
+  if (Number(otp) == Number(recOTP)) {
+    window.location.href = "Teacher_Login.html";
+  }
+  else {
+    showAlert("Invalid OTP, Please Try again", "error", "", "Oops!", "#FF2E2E");
+
+    document.getElementById("name-F").value = emailID;
+    document.getElementById("email-F").value = "";
+  }
 }
