@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html style="font-size: 16px;" lang="en"><head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      />
     <link rel="icon" href="
       https://cdn-icons-png.flaticon.com/512/178/178796.png?w=826&t=st=1679160181~exp=1679160781~hmac=0bd384e7d47c572d266bca6e58fba2bfad9b9c14bc77d72e3c01d37b4ef28fbe">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,8 +18,6 @@
       window.onpageshow = function (evt) { if (evt.persisted) noBack(); }
       window.onunload = function () { void (0); }
   </script>
-
-
     <link rel="stylesheet" href="nicepage.css" media="screen">
     <link rel="stylesheet" href="Admin_Login.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery-1.9.1.min.js"
@@ -37,15 +39,34 @@
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
     <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-    <script src="firebase_js_config.js"></script>
-    <script src="script.js"></script>
+  <script src="adminLoginStartScript.js"></script>
+  <script src="firebase_js_config.js"></script>
 
-
+  <script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.all.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-messaging.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-functions.js"></script>
+  <script>
+        var config = {
+          apiKey: "AIzaSyBU2Ew2SWajCz3HrEQ9-nLQ2OgWLJertNc",
+          authDomain: "beprojecttrial.firebaseapp.com",
+          databaseURL: "https://beprojecttrial-default-rtdb.firebaseio.com/",
+          projectId: "beprojecttrial",
+          storageBucket: "beprojecttrial.appspot.com",
+          messagingSenderId: "566408762089",
+        };
+        firebase.initializeApp(config);
+    </script>
   <body class="u-body u-xl-mode" data-lang="en"><header class="u-align-center-sm
       u-align-center-xs u-clearfix u-header u-header" id="sec-492c"><div
         class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md
         u-valign-bottom-xl u-sheet-1">
-        <a href="Admin_Login.html" class="u-image u-logo u-image-1"
+        <a href="Admin_Login.html" class="animate__animated animate__bounceInUp
+          u-image u-logo u-image-1"
           data-image-width="128" data-image-height="128">
           <img src="images/918752.png" class="u-logo-image u-logo-image-1">
         </a>
@@ -53,43 +74,62 @@
     <section class="u-clearfix u-section-1" id="sec-aaa7">
 
 
-      <h3 text-align= "center" id ="admin_login_heading" class="u-text u-text-default u-text-1">...</h3><span
-        class="u-file-icon u-icon u-icon-1" data-href="index.html"
+      <h3 text-align="center" id="admin_login_heading" class="animate__animated
+        animate__rubberBand u-text
+        u-text-default u-text-1">...</h3><span
+        class="animate__animated animate__bounceInUp u-file-icon u-icon
+        u-icon-1" data-href="index.html"
         title="LoginPage"><img src="images/3808335.png" alt=""></span>
       <div class="u-container-style u-expanded-width-lg u-expanded-width-md
         u-expanded-width-sm u-expanded-width-xs u-group u-shape-rectangle
         u-white u-group-1">
         <div class="u-container-layout u-container-layout-1">
-          <h6 class="u-align-center u-text u-text-default-lg u-text-default-xl
-            u-text-2">Withdraw Faculty</h6><span class="u-file-icon
+          <h6 class="animate__animated animate__bounceInUp u-align-center u-text
+            u-text-default-lg u-text-default-xl
+            u-text-2">Withdraw Faculty</h6><span class="animate__animated
+            animate__bounceInUp u-file-icon
             u-hover-feature u-icon u-icon-2"><img src="images/7542133.png"
-              alt=""></span><span class="u-file-icon u-hover-feature u-icon
+              alt=""></span><span class="animate__animated animate__bounceInUp
+            u-file-icon u-hover-feature u-icon
             u-icon-3"><img src="images/1077063.png" alt=""></span>
-          <h6 class="u-text u-text-default u-text-3">Profile</h6>
-          <h6 class="u-text u-text-default u-text-4">Enroll Faculty</h6><span
-            class="u-file-icon u-hover-feature u-icon u-icon-4"><img
+          <h6 class="animate__animated animate__bounceInUp u-text u-text-default
+            u-text-3">Profile</h6>
+          <h6 class="animate__animated animate__bounceInUp u-text u-text-default
+            u-text-4">Enroll Faculty</h6><span
+            class="animate__animated animate__bounceInUp u-file-icon
+            u-hover-feature
+            u-icon u-icon-4"><img
               src="images/560277.png" alt=""></span>
-          <h6 class="u-align-center-sm u-align-center-xs u-text
+          <h6 class="animate__animated animate__bounceInUp u-align-center-sm
+            u-align-center-xs u-text
             u-text-default-lg u-text-default-md u-text-default-xl u-text-5">Enroll
-            Student</h6><span class="u-file-icon u-hover-feature u-icon
+            Student</h6><span class="animate__animated animate__bounceInUp
+            u-file-icon u-hover-feature u-icon
             u-icon-rectangle u-text-black u-icon-5"><img
               src="images/3482874-1d461a4c.png" alt=""></span><span
-            class="u-file-icon u-hover-feature u-icon u-icon-6"><img
+            class="animate__animated animate__bounceInUp u-file-icon
+            u-hover-feature u-icon u-icon-6"><img
               src="images/1286827.png" alt=""></span>
-          <h6 class="u-align-center u-text u-text-6">Check Attendance</h6>
-          <a href="EnrollStudent.html" class="u-border-3 u-border-black
+          <h6 class="animate__animated animate__bounceInUp u-align-center u-text
+            u-text-6">Check Attendance</h6>
+          <a href="EnrollStudent.html" class="animate__animated
+            animate__bounceInUp u-border-3 u-border-black
             u-border-hover-black u-btn u-btn-round u-button-style u-custom-font
             u-font-source-sans-pro u-hover-feature u-none u-radius-10 u-btn-1">.</a>
-          <a href="Check_Attendance_Admin.html" class="u-border-3 u-border-black
+          <a href="Check_Attendance_Admin.html" class="animate__animated
+            animate__bounceInUp u-border-3 u-border-black
             u-border-hover-black u-btn u-btn-round u-button-style u-custom-font
             u-font-source-sans-pro u-hover-feature u-none u-radius-10 u-btn-2">.</a>
-          <a href="DeleteFaculty.html" class="u-border-3 u-border-black
+          <a href="DeleteFaculty.html" class="animate__animated
+            animate__bounceInUp u-border-3 u-border-black
             u-border-hover-black u-btn u-btn-round u-button-style u-custom-font
             u-font-source-sans-pro u-hover-feature u-none u-radius-10 u-btn-3">.</a>
-          <a href="EnrollFaculty.html" class="u-border-3 u-border-black
+          <a href="EnrollFaculty.html" class="animate__animated
+            animate__bounceInUp u-border-3 u-border-black
             u-border-hover-black u-btn u-btn-round u-button-style u-custom-font
             u-font-source-sans-pro u-hover-feature u-none u-radius-10 u-btn-4">.</a>
-          <a href="Admin_profile_page.html" class="u-border-3 u-border-black
+          <a href="Admin_profile_page.html" class="animate__animated
+            animate__bounceInUp u-border-3 u-border-black
             u-border-hover-black u-btn u-btn-round u-button-style u-custom-font
             u-font-source-sans-pro u-hover-feature u-none u-radius-10 u-btn-5">.</a>
         </div>

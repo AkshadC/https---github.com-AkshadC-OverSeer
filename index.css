@@ -10,7 +10,15 @@
   min-height: 487px;
   margin: 71px auto 60px;
 }
-
+div.overlay {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.5;
+  filter: alpha(opacity = 50); /* required for opacity to work in IE */
+}
 .u-section-1 .u-container-layout-1 {
   padding: 0;
 }

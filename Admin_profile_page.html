@@ -29,8 +29,10 @@
     <meta property="og:type" content="website">
     <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
     <script  src = "firebase_js_config.js"></script>
+    <script  src = "trial1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.all.min.js"></script>
-    
+    <script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.all.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
     <!-- Add additional services you want to use -->
     <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
@@ -81,7 +83,7 @@
                   <div class="u-container-layout u-container-layout-2">
                     <h4 class="u-align-center u-text u-text-2">About me</h4>
                     <p id = "AboutTextAdmin"class="u-custom-font u-font-source-sans-pro u-text
-                      u-text-default u-text-3">&nbsp;</p>
+                      u-text-default u-text-3">;</p>
                   </div>
                 </div>
                 <div class="u-container-style u-layout-cell u-size-20
@@ -89,16 +91,9 @@
                   <div class="u-container-layout u-container-layout-3">
                     <img src="images/cvv.jpg" alt="" class="u-image
                       u-image-circle u-image-1" data-image-width="700"
-                      data-image-height="700">
-                    <a onclick="editAdminProfile()" class="u-active-none
-                      u-border-2 u-border-black u-border-no-left
-                      u-border-no-right u-border-no-top u-bottom-left-radius-0
-                      u-bottom-right-radius-0 u-btn u-btn-rectangle
-                      u-button-style u-custom-font u-font-source-sans-pro
-                      u-hover-none u-none u-radius-0 u-text-body-color
-                      u-top-left-radius-0 u-top-right-radius-0 u-btn-1">Edit
-                      Details</a>
+                      data-image-height="700">    
                   </div>
+                  
                 </div>
                 <div class="u-container-style u-layout-cell u-size-20
                   u-layout-cell-3">
@@ -107,7 +102,7 @@
                       u-font-source-sans-pro u-text u-text-4">Details</h4>
                     <div class="u-expanded-width u-table u-table-responsive
                       u-table-1">
-                      <table class="u-table-entity">
+                      <table class="u-table-entity" id="ProfileTable">
                         <colgroup>
                           <col width="30.8%">
                           <col width="69.2%">
@@ -116,34 +111,38 @@
                           u-table-body u-table-body-1">
                           <tr style="height: 74px;">
                             <td class="u-table-cell">Name:</td>
-                            <td class="u-table-cell" spellcheck="false">Description</td>
+                            <td id='NameDescription' class="u-table-cell" spellcheck="true"></td>
+                    
                           </tr>
                           <tr style="height: 65px;">
                             <td class="u-table-cell">Email Id:</td>
-                            <td class="u-table-cell">Description</td>
+                            <td id ='EmailDescription' class="u-table-cell"></td>
                           </tr>
                           <tr style="height: 76px;">
                             <td class="u-table-cell">Phone No:</td>
-                            <td class="u-table-cell">Description</td>
+                            <td id ='PhoneNoDescription' class="u-table-cell"></td>
                           </tr>
                           <tr style="height: 25px;">
                             <td class="u-table-cell">Address:</td>
-                            <td class="u-table-cell">Description</td>
+                            <td id ='AddressDescription'class="u-table-cell"></td>
                           </tr>
                           <tr style="height: 65px;">
                             <td class="u-table-cell">DOB:</td>
-                            <td class="u-table-cell" spellcheck="false">Description</td>
+                            <td id ='DOBDescription' class="u-table-cell" spellcheck="false"></td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
+                
               </div>
+              
             </div>
           </div>
         </div>
-      </div>
+
+</div>     
     </section>
 
 

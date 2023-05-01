@@ -74,6 +74,27 @@
   padding: 0;
 }
 
+.u-section-1 .submit-button {
+  background-color: #ff8c94; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none; /* Button border */
+  border-radius: 50px; /* Border radius for a round shape */
+  padding: 12px 24px; /* Button padding */
+  font-size: 18px; /* Button font size */
+  cursor: pointer; /* Cursor style on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for depth effect */
+  transition: background-color 0.3s ease-in-out; /* Transition for smooth hover effect */
+
+  cursor: pointer;
+}
+
+
+
+/* Hover effect */
+#submit-button:hover {
+  background-color: #ff6673; /* Button background color on hover */
+}
+
 .u-section-1 .u-layout-cell-3 {
   min-height: 412px;
 }

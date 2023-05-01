@@ -31,15 +31,15 @@ function enrollTeacher() {
       var newItemRef = teachersDB1.child(tName);
       const newteacher = {
         ID: "F" + newCounterValue,
-        firstName: firstName,
-        lastName: lastName,
-        emailID: emailID,
-        age: age,
+        FirstName: firstName,
+        LastName: lastName,
+        EmailID: emailID,
+        Age: age,
         DOB: DOB,
-        phoneNo: phoneNo,
-        subject: subject,
-        dept: dept,
-        address: address
+        PhoneNo: phoneNo,
+        Subject: subject,
+        Dept: dept,
+        Address: address
       };
       newItemRef.set(newteacher);
       var msg = "NEW FACULTY ADDED SUCCESSFULLY WITH ID " + "(" + "F" + newCounterValue + ")!!";
@@ -233,37 +233,183 @@ let otp = Math.floor(100000 + Math.random() * 900000);
 function AsendOtp() {
   var TO = document.getElementById("name-2b50").value;
   var database = firebase.database();
-  database.ref("Admins").orderByChild("EmailID").equalTo(TO).once("value").then(function (snapshot) {
-    if (snapshot.exists()) {
-      snapshot.forEach(function (childSnapshot) {
-        var adminName = childSnapshot.key;
-        var path = "Admins/" + adminName + "/FirstName";
-        var dbRef = firebase.database().ref(path);
-        dbRef.once("value").then(function (snapshot1) {
-          var name = snapshot1.val();
-          console.log(name);
-          localStorage.setItem('AuserName', name);
-        }).catch(function (error) {
-          console.error(error);
+  if(TO.substr(-13) === "@dypvp.edu.in"){
+    database.ref("Admins").orderByChild("EmailID").equalTo(TO).once("value").then(function (snapshot) {
+      if (snapshot.exists()) {
+        snapshot.forEach(function (childSnapshot) {
+          var adminName = childSnapshot.key;
+          localStorage.setItem('AdminKey', adminName);
+          var path = "Admins/" + adminName + "/FirstName";
+          var dbRef = firebase.database().ref(path);
+          dbRef.once("value").then(function (snapshot1) {
+            var name = snapshot1.val();
+            localStorage.setItem('AuserName', name);
+          }).catch(function (error) {
+            console.error(error);
+          });
+          var loggedInAdminKey = localStorage.getItem('AdminKey');
+          var name = "";
+            firebase.database().ref('Admins/'+loggedInAdminKey).once("value")
+              .then((snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                  
+                  const key = childSnapshot.key;
+                  if(key === 'About'){
+                    localStorage.setItem('AAboutTextAdmin',childSnapshot.val());
+                    
+                  }
+                  else if(key === 'EmailID'){
+                    localStorage.setItem('AEmailDescription',childSnapshot.val());
+                   
+                  }
+                  else if(key === 'PhoneNo'){
+                    localStorage.setItem('APhoneNoDescription',childSnapshot.val());
+                  
+                  }
+                  else if(key === 'Address'){
+                    localStorage.setItem('AAddressDescription',childSnapshot.val());
+                  
+                  }else if(key === 'DOB'){
+                    localStorage.setItem('ADOBDescription',childSnapshot.val());
+                    
+                  }
+                  else if(key === 'FirstName'){
+                      name = name+childSnapshot.val();
+                  }
+                  else if(key === 'LastName'){
+                    name = name+ " " +childSnapshot.val();
+                }
+                localStorage.setItem('AName',name);
+                });
+              });
+          Email.send({
+            Host: "smtp.elasticemail.com",
+            Username: "akshadclg@gmail.com",
+            Password: "546777A00214ED311839906610D4BDBAE1D8",
+            To: TO,
+            From: "akshadclg@gmail.com",
+            Subject: "Your OveerSeer Login OTP",
+            Body: "The OTP is: " + otp
+          }).then(
+            showAlert("OTP SENT TO: " + TO, "success", "", "Success!", "#AAFF00")
+          );
         });
-        Email.send({
-          Host: "smtp.elasticemail.com",
-          Username: "akshadclg@gmail.com",
-          Password: "546777A00214ED311839906610D4BDBAE1D8",
-          To: TO,
-          From: "akshadclg@gmail.com",
-          Subject: "Your OveerSeer Login OTP",
-          Body: "The OTP is: " + otp
-        }).then(
-          showAlert("OTP SENT TO: " + TO, "success", "", "Success!", "#AAFF00")
-        );
-      });
-    }
-    else {
-      showAlert("Invalid EMAIL ID , Please Try again", "error", "", "Oops!", "#FF2E2E");
-    }
-});
+      }
+      else {
+        showAlert("Invalid EMAIL ID , Please Try again", "error", "", "Oops!", "#FF2E2E");
+        document.getElementById("name-2b50").value = "@dypvp.edu.in";
+      }
+  });
+  }
+  else{
+    showAlert("Not An Official Institute Email ID, Please Try again", "error", "", "Oops!", "#FF2E2E");
+    document.getElementById("name-2b50").value = "@dypvp.edu.in";
+  }
+
+
 }
+
+
+function FSendOtp() {
+  var TO = document.getElementById("name-F").value;
+  var database = firebase.database();
+
+  if(TO.substr(-13) === "@dypvp.edu.in"){
+
+    database.ref("Faculty").orderByChild("EmailID").equalTo(TO).once("value").then(function (snapshot) {
+      
+      if (snapshot.exists()) {
+
+        snapshot.forEach(function (childSnapshot) {
+          console.log("HI");
+          var teacherName = childSnapshot.key;
+
+          localStorage.setItem('TeacherKey', teacherName);
+
+          var path = "Faculty/" + teacherName + "/FirstName";
+
+          var dbRef = firebase.database().ref(path);
+
+          dbRef.once("value").then(function (snapshot1) {
+            var name = snapshot1.val();
+            localStorage.setItem('AuserName', name);
+
+          }).catch(function (error) {
+            console.error(error);
+          });
+          var loggedInAdminKey = localStorage.getItem('TeacherKey');
+          var name = "";
+            firebase.database().ref('Faculty/'+loggedInAdminKey).once("value")
+              .then((snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                  
+                  const key = childSnapshot.key;
+                  if(key === 'About'){
+                    localStorage.setItem('AAboutTextAdmin',childSnapshot.val());
+                    
+                  }
+                  else if(key === 'EmailID'){
+                    localStorage.setItem('AEmailDescription',childSnapshot.val());
+                   
+                  }
+                  else if(key === 'PhoneNo'){
+                    localStorage.setItem('APhoneNoDescription',childSnapshot.val());
+                  
+                  }
+                  else if(key === 'Address'){
+                    localStorage.setItem('AAddressDescription',childSnapshot.val());
+                  
+                  }else if(key === 'DOB'){
+                    localStorage.setItem('ADOBDescription',childSnapshot.val());
+                    
+                  }
+                  else if(key === 'FirstName'){
+                      name = name+childSnapshot.val();
+                  }
+                  else if(key === 'LastName'){
+                    name = name+ " " +childSnapshot.val();
+                }
+                localStorage.setItem('AName',name);
+                });
+              });
+          Email.send({
+            Host: "smtp.elasticemail.com",
+            Username: "akshadclg@gmail.com",
+            Password: "546777A00214ED311839906610D4BDBAE1D8",
+            To: TO,
+            From: "akshadclg@gmail.com",
+            Subject: "Your OveerSeer Login OTP",
+            Body: "The OTP is: " + otp
+          }).then(
+            showAlert("OTP SENT TO: " + TO, "success", "", "Success!", "#AAFF00")
+          );
+        });
+      }
+      else {
+        showAlert("Invalid EMAIL ID , Please Try again", "error", "", "Oops!", "#FF2E2E");
+        document.getElementById("name-2b50").value = "@dypvp.edu.in";
+      }
+  });
+  }
+  else{
+    showAlert("Not An Official Institute Email ID, Please Try again", "error", "", "Oops!", "#FF2E2E");
+    document.getElementById("name-2b50").value = "@dypvp.edu.in";
+  }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 function adminVerifyOTP() {
   var recOTP = document.getElementById("email-2b50").value;
   var emailID = document.getElementById("name-2b50").value;
@@ -292,3 +438,4 @@ function teacherVerifyOTP() {
     document.getElementById("email-F").value = "";
   }
 }
+

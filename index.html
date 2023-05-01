@@ -9,12 +9,19 @@
     <meta name="description" content="">
     <title>OverSeer</title>
     <script type="text/javascript">
-      function noBack() { window.history.forward(); }
-      noBack();
-      window.onload = noBack;
-      window.onpageshow = function (evt) { if (evt.persisted) noBack(); }
-      window.onunload = function () { void (0); }
-  </script>
+      window.onload = function() {
+        if (typeof history.pushState === "function") {
+          history.pushState("back", null, null);
+          window.onpopstate = function () {
+            window.location.href = "[errorPage.html]";
+          };
+        } else {
+          window.onhashchange = function() {
+            window.location.href = "[errorPage.html]";
+          };
+        }
+      };
+    </script>
     <link rel="stylesheet" href="nicepage.css" media="screen">
     <link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery-1.9.1.min.js"
@@ -132,7 +139,7 @@
                         <div class="u-form-email u-form-group">
                           <label for="email-2b50" class="u-custom-font
                             u-font-source-sans-pro u-label u-label-2">OTP</label>
-                          <input type="email" placeholder="Enter the OTP"
+                          <input  placeholder="Enter the OTP"
                             id="email-2b50" name="email" class="u-border-2
                             u-border-black u-custom-font u-font-source-sans-pro
                             u-input u-input-rectangle u-none u-radius-13"
@@ -215,7 +222,7 @@
                           value="1a0f2ce9d956c64b989a64b9e046fe4c">
                       </form>
                     </div>
-                    <a onclick="FsendOtp()"
+                    <a onclick="FSendOtp()"
                       class="u-active-none u-align-right u-border-2
                       u-border-grey-80 u-border-hover-black u-border-no-left
                       u-border-no-right u-border-no-top u-bottom-left-radius-0
@@ -231,49 +238,7 @@
         </div>
       </div>
       
-      <script>
-        
-      </script>
-      <script>
 
-        
-         
-        
-      function FsendOtp(){
-      
-      var TO = document.getElementById("name-F").value;
-      var teacherName;
-            var database = firebase.database();
-            database.ref("Admins").orderByChild("EmailID").equalTo(TO).once("value").then(function(snapshot) {
-              snapshot.forEach(function(childSnapshot) {
-              adminName = childSnapshot.key;
-              var path = "Faculty/"+adminName+"/firstName";
-              var dbRef = firebase.database().ref(path);
-              dbRef.once("value").then(function(snapshot1) {
-                  var name = snapshot1.val();
-                  localStorage.setItem('TuserName', name);
-                }).catch(function(error) {
-                  console.error(error);
-                });
-              Email.send({
-              Host : "smtp.elasticemail.com",
-              Username : "akshadclg@gmail.com",
-              Password : "546777A00214ED311839906610D4BDBAE1D8",
-              To : TO,
-              From : "akshadclg@gmail.com",
-              Subject : "Your OveerSeer Login OTP",
-              Body : "The OTP is: " + otp
-              }).then(
-                showAlert("OTP SENT TO: "+TO ,"error","","Oops!","#FF2E2E")
-              );
-              });
-          }).catch(function(error) {
-            console.error(error);
-          });
-    }
-        
-
-      </script>
     </section>
 
 
