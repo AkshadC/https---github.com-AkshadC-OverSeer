@@ -157,6 +157,7 @@ function enrollStudent() {
         Div: div
       };
       newStudentRef.set(stud);
+      localStorage.setItem('NewStudentCheck','old')
       var msg = "NEW STUDENT ADDED SUCCESSFULLY WITH ROLL NO " + "(" + "S" + newCounterValue + ")!!";
       showAlert(msg, "success", "Admin_Login.html", "Sucess", "#AAFF00");
 
@@ -439,3 +440,49 @@ function teacherVerifyOTP() {
   }
 }
 
+function downloadFirebaseDataByKeyAsCSV(databaseURL, authToken, key) {
+  // Fetch the data for the specific key using the Firebase REST API
+  fetch(databaseURL + '/' + key + '.json?auth=' + authToken)
+    .then(response => response.json())
+    .then(data => {
+      // Convert the data to CSV format
+      const csvData = convertToCSV({[key]: data});
+
+      // Create a download link for the CSV file
+      const downloadLink = document.createElement('a');
+      downloadLink.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
+      downloadLink.setAttribute('download', key + '.csv');
+      document.body.appendChild(downloadLink);
+      
+      // Trigger the download
+      downloadLink.click();
+      
+      // Remove the download link from the DOM
+      document.body.removeChild(downloadLink);
+    })
+    .catch(error => console.error(error));
+}
+
+// Convert JSON data to CSV format
+function convertToCSV(data) {
+  const keys = Object.keys(data);
+  const rows = [];
+
+  // Add header row with column names
+  rows.push(Object.keys(data[keys[0]]).join(','));
+
+  // Add data rows
+  for (const key in data) {
+    rows.push(Object.values(data[key]).join(','));
+  }
+
+  // Combine rows into a single CSV string
+  return rows.join('\n');
+}
+function getAttendance(){
+  
+}
+
+function editStudentDetails(){
+
+}

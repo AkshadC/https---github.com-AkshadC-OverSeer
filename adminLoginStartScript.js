@@ -2,7 +2,6 @@ window.onload = function() {
 
     setWelcomeHeading();
     
-
   };
 
 function setWelcomeHeading(){
