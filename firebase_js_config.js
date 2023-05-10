@@ -1,3 +1,4 @@
+
 function enrollTeacher() {
 
   var counterRef = firebase.database().ref("FacultyCounter/myCollectionCounter");
@@ -157,7 +158,7 @@ function enrollStudent() {
         Div: div
       };
       newStudentRef.set(stud);
-      localStorage.setItem('NewStudentCheck','old')
+      localStorage.setItem('NewStudentCheck', 'old')
       var msg = "NEW STUDENT ADDED SUCCESSFULLY WITH ROLL NO " + "(" + "S" + newCounterValue + ")!!";
       showAlert(msg, "success", "Admin_Login.html", "Sucess", "#AAFF00");
 
@@ -196,7 +197,7 @@ function enrollStudentFromTeacher() {
   var counterpath = "StudentsCounter/" + dept + "/" + year + "/" + div;
   var student = firebase.database().ref(studentPath);
   var counter = firebase.database().ref(counterpath);
-
+  var attendanceRef = firebase.database().ref('Attendance' + '/' + dept + '/' + year + '/' + div);
   counter.transaction(function (currentValue) {
     return (currentValue || 0) + 1;
   }, function (error, committed, snapshot) {
@@ -221,8 +222,9 @@ function enrollStudentFromTeacher() {
         Div: div
       };
       newStudentRef.set(stud);
+
       var msg = "NEW STUDENT ADDED SUCCESSFULLY WITH ROLL NO " + "(" + "S" + newCounterValue + ")!!";
-      showAlert(msg, "success", "Teacher_login.html", "Sucess", "#AAFF00");
+      showAlert(msg, "success", "Teacher_Login.html", "Sucess", "#AAFF00");
 
     }
 
@@ -234,7 +236,7 @@ let otp = Math.floor(100000 + Math.random() * 900000);
 function AsendOtp() {
   var TO = document.getElementById("name-2b50").value;
   var database = firebase.database();
-  if(TO.substr(-13) === "@dypvp.edu.in"){
+  if (TO.substr(-13) === "@dypvp.edu.in") {
     database.ref("Admins").orderByChild("EmailID").equalTo(TO).once("value").then(function (snapshot) {
       if (snapshot.exists()) {
         snapshot.forEach(function (childSnapshot) {
@@ -250,39 +252,39 @@ function AsendOtp() {
           });
           var loggedInAdminKey = localStorage.getItem('AdminKey');
           var name = "";
-            firebase.database().ref('Admins/'+loggedInAdminKey).once("value")
-              .then((snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                  
-                  const key = childSnapshot.key;
-                  if(key === 'About'){
-                    localStorage.setItem('AAboutTextAdmin',childSnapshot.val());
-                    
-                  }
-                  else if(key === 'EmailID'){
-                    localStorage.setItem('AEmailDescription',childSnapshot.val());
-                   
-                  }
-                  else if(key === 'PhoneNo'){
-                    localStorage.setItem('APhoneNoDescription',childSnapshot.val());
-                  
-                  }
-                  else if(key === 'Address'){
-                    localStorage.setItem('AAddressDescription',childSnapshot.val());
-                  
-                  }else if(key === 'DOB'){
-                    localStorage.setItem('ADOBDescription',childSnapshot.val());
-                    
-                  }
-                  else if(key === 'FirstName'){
-                      name = name+childSnapshot.val();
-                  }
-                  else if(key === 'LastName'){
-                    name = name+ " " +childSnapshot.val();
+          firebase.database().ref('Admins/' + loggedInAdminKey).once("value")
+            .then((snapshot) => {
+              snapshot.forEach((childSnapshot) => {
+
+                const key = childSnapshot.key;
+                if (key === 'About') {
+                  localStorage.setItem('AAboutTextAdmin', childSnapshot.val());
+
                 }
-                localStorage.setItem('AName',name);
-                });
+                else if (key === 'EmailID') {
+                  localStorage.setItem('AEmailDescription', childSnapshot.val());
+
+                }
+                else if (key === 'PhoneNo') {
+                  localStorage.setItem('APhoneNoDescription', childSnapshot.val());
+
+                }
+                else if (key === 'Address') {
+                  localStorage.setItem('AAddressDescription', childSnapshot.val());
+
+                } else if (key === 'DOB') {
+                  localStorage.setItem('ADOBDescription', childSnapshot.val());
+
+                }
+                else if (key === 'FirstName') {
+                  name = name + childSnapshot.val();
+                }
+                else if (key === 'LastName') {
+                  name = name + " " + childSnapshot.val();
+                }
+                localStorage.setItem('AName', name);
               });
+            });
           Email.send({
             Host: "smtp.elasticemail.com",
             Username: "akshadclg@gmail.com",
@@ -300,9 +302,9 @@ function AsendOtp() {
         showAlert("Invalid EMAIL ID , Please Try again", "error", "", "Oops!", "#FF2E2E");
         document.getElementById("name-2b50").value = "@dypvp.edu.in";
       }
-  });
+    });
   }
-  else{
+  else {
     showAlert("Not An Official Institute Email ID, Please Try again", "error", "", "Oops!", "#FF2E2E");
     document.getElementById("name-2b50").value = "@dypvp.edu.in";
   }
@@ -315,10 +317,10 @@ function FSendOtp() {
   var TO = document.getElementById("name-F").value;
   var database = firebase.database();
 
-  if(TO.substr(-13) === "@dypvp.edu.in"){
+  if (TO.substr(-13) === "@dypvp.edu.in") {
 
     database.ref("Faculty").orderByChild("EmailID").equalTo(TO).once("value").then(function (snapshot) {
-      
+
       if (snapshot.exists()) {
 
         snapshot.forEach(function (childSnapshot) {
@@ -340,39 +342,42 @@ function FSendOtp() {
           });
           var loggedInAdminKey = localStorage.getItem('TeacherKey');
           var name = "";
-            firebase.database().ref('Faculty/'+loggedInAdminKey).once("value")
-              .then((snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                  
-                  const key = childSnapshot.key;
-                  if(key === 'About'){
-                    localStorage.setItem('AAboutTextAdmin',childSnapshot.val());
-                    
-                  }
-                  else if(key === 'EmailID'){
-                    localStorage.setItem('AEmailDescription',childSnapshot.val());
-                   
-                  }
-                  else if(key === 'PhoneNo'){
-                    localStorage.setItem('APhoneNoDescription',childSnapshot.val());
-                  
-                  }
-                  else if(key === 'Address'){
-                    localStorage.setItem('AAddressDescription',childSnapshot.val());
-                  
-                  }else if(key === 'DOB'){
-                    localStorage.setItem('ADOBDescription',childSnapshot.val());
-                    
-                  }
-                  else if(key === 'FirstName'){
-                      name = name+childSnapshot.val();
-                  }
-                  else if(key === 'LastName'){
-                    name = name+ " " +childSnapshot.val();
+          firebase.database().ref('Faculty/' + loggedInAdminKey).once("value")
+            .then((snapshot) => {
+              snapshot.forEach((childSnapshot) => {
+
+                const key = childSnapshot.key;
+                if (key === 'About') {
+                  localStorage.setItem('AAboutTextAdmin', childSnapshot.val());
+
                 }
-                localStorage.setItem('AName',name);
-                });
+                else if (key === 'EmailID') {
+                  localStorage.setItem('AEmailDescription', childSnapshot.val());
+
+                }
+                else if (key === 'PhoneNo') {
+                  localStorage.setItem('APhoneNoDescription', childSnapshot.val());
+
+                }
+                else if (key === 'Address') {
+                  localStorage.setItem('AAddressDescription', childSnapshot.val());
+
+                } else if (key === 'DOB') {
+                  localStorage.setItem('ADOBDescription', childSnapshot.val());
+
+                }
+                else if (key === 'FirstName') {
+                  name = name + childSnapshot.val();
+                }
+                else if (key === 'LastName') {
+                  name = name + " " + childSnapshot.val();
+                }
+                else if (key == 'Subject') {
+                  localStorage.setItem('TeacherSubject', childSnapshot.val())
+                }
+                localStorage.setItem('AName', name);
               });
+            });
           Email.send({
             Host: "smtp.elasticemail.com",
             Username: "akshadclg@gmail.com",
@@ -390,9 +395,9 @@ function FSendOtp() {
         showAlert("Invalid EMAIL ID , Please Try again", "error", "", "Oops!", "#FF2E2E");
         document.getElementById("name-2b50").value = "@dypvp.edu.in";
       }
-  });
+    });
   }
-  else{
+  else {
     showAlert("Not An Official Institute Email ID, Please Try again", "error", "", "Oops!", "#FF2E2E");
     document.getElementById("name-2b50").value = "@dypvp.edu.in";
   }
@@ -440,49 +445,331 @@ function teacherVerifyOTP() {
   }
 }
 
-function downloadFirebaseDataByKeyAsCSV(databaseURL, authToken, key) {
-  // Fetch the data for the specific key using the Firebase REST API
-  fetch(databaseURL + '/' + key + '.json?auth=' + authToken)
-    .then(response => response.json())
-    .then(data => {
-      // Convert the data to CSV format
-      const csvData = convertToCSV({[key]: data});
+function getAttendance() {
 
-      // Create a download link for the CSV file
-      const downloadLink = document.createElement('a');
-      downloadLink.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
-      downloadLink.setAttribute('download', key + '.csv');
-      document.body.appendChild(downloadLink);
-      
-      // Trigger the download
-      downloadLink.click();
-      
-      // Remove the download link from the DOM
-      document.body.removeChild(downloadLink);
-    })
-    .catch(error => console.error(error));
+
+  const keyRef = firebase.database().ref('Attendance/CE/BE');
+
+  const headers = [];
+
+
+  keyRef.once('value')
+    .then((snapshot) => {
+      const data = snapshot.val();
+
+      // Convert the data into an array of objects
+      const dataArray = Object.keys(data).map((key) => {
+        return data[key];
+      });
+
+
+
+      Object.keys(dataArray[0]).forEach(header => {
+        headers.push(header);
+      });
+
+      displayFurther(headers);
+
+
+
+    });
+
+}
+function displayFurther(headers) {
+
+  var year = document.getElementById("select-0cf8").value;
+  var division = document.getElementById("select-14e7").value;
+  var fromDate = document.getElementById("date-f412").value;
+  var toDate = document.getElementById("date-bfca").value;
+  var sub = localStorage.getItem("TeacherSubject");
+  const keyRef2 = firebase.database().ref('Attendance/CE/BE/B');
+
+  keyRef2.once('value', (snapshot) => {
+    const data = snapshot.val();
+
+
+    const newData = Object.keys(data).map((key, index) => {
+      return { 'OVERSEER': headers[index], ...data[key] };
+    });
+
+
+    for (let i = 0; i < newData.length; i++) {
+
+      const data = newData[i];
+      for (const key in data) {
+        if (key != "OVERSEER") {
+          for (const k in data[key]) {
+
+            if (data[key][k] != "EL5") {
+
+              data[key][k] = "  ";
+            }
+          }
+        }
+
+      }
+    }
+
+    const parsedData = Papa.parse(Papa.unparse(newData), { header: true });
+
+    const [month1, day1, year1] = fromDate.split('/');
+    const date1 = new Date(`${month1}-${day1}-${year1}`);
+
+    const [month2, day2, year2] = toDate.split('/');
+    const date2 = new Date(`${month2}-${day2}-${year2}`);
+
+    const convertedDateString1 = `${date1.getFullYear()}-${String(date1.getMonth() + 1).padStart(2, '0')}-${String(date1.getDate()).padStart(2, '0')}`;
+    const convertedDateString2 = `${date2.getFullYear()}-${String(date2.getMonth() + 1).padStart(2, '0')}-${String(date2.getDate()).padStart(2, '0')}`;
+
+
+
+    const minDate = new Date(convertedDateString1);
+    const maxDate = new Date(convertedDateString2);
+
+    parsedData.meta.fields.forEach(field => {
+
+
+      const colDate = new Date(field);
+      if (colDate > maxDate) {
+        const columnIndex = parsedData.meta.fields.indexOf(field);
+
+        // Delete the column from the data
+        parsedData.data.forEach(row => {
+          delete row[field];
+        });
+
+        // Remove the column name from the header
+        parsedData.meta.fields.splice(columnIndex, 1);
+      }
+      else if (colDate < minDate) {
+        const columnIndex = parsedData.meta.fields.indexOf(field);
+
+        // Delete the column from the data
+        parsedData.data.forEach(row => {
+          delete row[field];
+        });
+
+        parsedData.meta.fields.splice(columnIndex, 1);
+      }
+    });
+
+
+    const parsedObject = Papa.parse(Papa.unparse(parsedData));
+    const rows = parsedObject.data;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      for (let j = 0; j < row.length; j++) {
+        const value = row[j];
+        const newValue = value.replace(/,/g, ' ');
+        row[j] = newValue;
+      }
+    }
+
+
+    const tableDiv = document.getElementById('tableContainer');
+    tableDiv.style.top = '50px';
+    tableDiv.style.margin = '0 auto';
+    tableDiv.innerHTML = '';
+
+    const table = document.createElement('table');
+    tableDiv.style.width = "1000px";
+    tableDiv.style.height = "500px";
+    table.style.borderCollapse = 'collapse';
+    rows.forEach(row => {
+      const tableRow = table.insertRow();
+      Object.values(row).forEach(value => {
+        const td = document.createElement('td');
+        td.textContent = value;
+        td.style.border = '1px solid black';
+        td.style.padding = '5px';
+        tableRow.appendChild(td);
+      });
+    });
+    table.style.borderCollapse = 'collapse';
+    table.style.border = '2px solid black';
+
+    table.style.overflow = 'auto';
+
+    // Set the cell styles
+    const cells = table.querySelectorAll('td, th');
+    cells.forEach(cell => {
+      cell.style.border = '2px solid black';
+      cell.style.padding = '8px';
+      cell.style.textAlign = 'center';
+    });
+    table.style.backgroundColor = 'white';
+    table.style.width = tableDiv.offsetWidth + "px";
+    table.style.height = tableDiv.offsetHeight + "px";
+    tableDiv.style.overflow = "auto";
+    tableDiv.appendChild(table);
+    window.scrollBy(0, 300);
+
+  });
+
 }
 
-// Convert JSON data to CSV format
-function convertToCSV(data) {
-  const keys = Object.keys(data);
-  const rows = [];
 
-  // Add header row with column names
-  rows.push(Object.keys(data[keys[0]]).join(','));
 
-  // Add data rows
-  for (const key in data) {
-    rows.push(Object.values(data[key]).join(','));
+
+function downloadCSV() {
+
+  const keyRef = firebase.database().ref('Attendance/CE/BE');
+
+  const headers = [];
+
+
+  keyRef.once('value')
+    .then((snapshot) => {
+      const data = snapshot.val();
+
+      // Convert the data into an array of objects
+      const dataArray = Object.keys(data).map((key) => {
+        return data[key];
+      });
+
+
+
+      Object.keys(dataArray[0]).forEach(header => {
+        headers.push(header);
+      });
+      downloadFurther(headers);
+    });
+}
+
+function downloadFurther(headers) {
+  var year = document.getElementById("select-0cf8").value;
+  var division = document.getElementById("select-14e7").value;
+  var fromDate = document.getElementById("date-325e").value;
+  var toDate = document.getElementById("date-8ddc").value;
+  var sub = localStorage.getItem("TeacherSubject");
+  const keyRef = firebase.database().ref('Attendance/CE/BE');
+  const keyRef2 = firebase.database().ref('Attendance/CE/BE/B');
+  const path = 'Subjects/BE/CE/B/EL5';
+  const subjects = firebase.database().ref('Subjects/BE/CE/B/');
+  const subRef = firebase.database().ref(path);
+
+  var subMap;
+  subjects.once('value',(snapshot)=>{
+    const value = snapshot.val();
+    subMap = value;
+  });
+
+  keyRef2.once('value', (snapshot) => {
+    const data = snapshot.val();
+
+
+    const newData = Object.keys(data).map((key, index) => {
+      return { 'OVERSEER': headers[index], ...data[key] };
+    });
+    const tempData = newData;
+    const parsedDataa = Object.values(newData).map(obj => Object.values(obj));
+    const firstROW = Object.keys(newData[0]);
+    
+    firstROW.push("Attendance_Percentage");
+    console.log(firstROW);
+    for (let i = 0; i < parsedDataa.length; i++) {
+      const row = parsedDataa[i];
+      for(var j = 1; j<row.length;j++){
+        if(Array.isArray(row[j])){
+
+        }
+      }
+      row.push(count.toString());
+    }
+    console.log(parsedDataa);
+    parsedData.unshift(firstROW);
+
+    var value;
+
+    subRef.once('value',(snapshot)=> {
+      value = snapshot.val();
+    
+      localStorage.setItem('value', value);
+
+    });
+
+    parsedData.slice(1).forEach(function (row) {
+      var lastColumnIndex = row.length - 1;
+      row[lastColumnIndex] = (row[lastColumnIndex] / parseInt(localStorage.getItem('value'))) * 100 + "%";
+    });
+
+  });
+}
+function downloadcsv(csv, filename) {
+
+  const csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+  if (navigator.msSaveBlob) { // IE 10+
+    navigator.msSaveBlob(csvData, filename);
+  } else {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(csvData);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
-  // Combine rows into a single CSV string
-  return rows.join('\n');
 }
-function getAttendance(){
+function editStudentDetails() {
+
+  const parsedData1 = Object.values(tempData).map(obj => Object.values(obj));
+
+  var individual = [];
+  for (var i = 0; i < parsedData1.length; i++) {
+    var ele = parsedData1[i];
+    var countMap= { "HPC":0,"EL5":0,"EL6":0,"DL":0};
+    for (var j = 0; j < ele.length; j++) {
+      
+      if (Array.isArray(ele[j])) {
+        var element = ele[j];
+        
+        for (var k = 0; k < element.length; k++) {
+          var subElement = element[k];
+
+          if(subElement !="NA"){
+            countMap[subElement] = (countMap[subElement] || 0) + 1;
+          };
+        }
+      } 
+    }
+    individual.push(countMap);
+  }
   
-}
+  var final = [];
+  for(var i = 0; i < individual.length; i++){
+    
+    var ele = individual[i];
+    var res = "";
+    for (var key in ele) {
+      if (ele.hasOwnProperty(key)) {
 
-function editStudentDetails(){
+        var value = ele[key];
 
+        for(var subject in subMap){
+
+          var total = subMap[subject];
+          if(key===subject){
+            res = res + key + ': ' + (value/total)*100 + "% ";
+          }
+        }
+      }
+    }
+    final.push(res);
+  }
+
+  for (var i = 0; i < parsedData1.length; i++) {
+    parsedData1[i].push(final[i]);
+    
+  }
+  
+  const firstROWALL = Object.keys(newData[0]);
+  firstROWALL.push("All Subject % \n for the given range");
+  parsedData1.unshift(firstROWALL);
+  const csv1 = Papa.unparse(parsedData);
+  console.log(parsedData);
+  const csv2 = Papa.unparse(parsedData1); 
+  const mergedCsv = `${csv1}\n\n${csv2}`;
+  console.log(mergedCsv);
+  //downloadcsv(mergedCsv,'NEW.csv');
 }

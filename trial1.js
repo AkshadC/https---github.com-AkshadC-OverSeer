@@ -10,5 +10,6 @@ function setProfilePage() {
   document.getElementById('PhoneNoDescription').innerHTML = localStorage.getItem('APhoneNoDescription');
   document.getElementById('AddressDescription').innerHTML = localStorage.getItem('AAddressDescription');
   document.getElementById('DOBDescription').innerHTML = localStorage.getItem('ADOBDescription');
+  
 
 }

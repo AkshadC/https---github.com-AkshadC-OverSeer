@@ -26,6 +26,34 @@
     <meta property="og:title" content="Check_Attendance_Teacher">
     <meta property="og:type" content="website">
   <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
+  <script src="firebase_js_config.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.all.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+  <!-- Add additional services you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-messaging.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-functions.js"></script>
+  <script src="PapaParse/papaparse.js"></script>
+  <script src="PapaParse/papaparse.min.js"></script>
+
+  <script>
+ 
+
+      // Initialize Firebase
+      // TODO: Replace with your project's customized code snippet
+      var config = {
+        apiKey: "AIzaSyBU2Ew2SWajCz3HrEQ9-nLQ2OgWLJertNc",
+        authDomain: "beprojecttrial.firebaseapp.com",
+        databaseURL: "https://beprojecttrial-default-rtdb.firebaseio.com/",
+        projectId: "beprojecttrial",
+        storageBucket: "beprojecttrial.appspot.com",
+        messagingSenderId: "566408762089",
+      };
+      firebase.initializeApp(config);
+    </script>
   <body class="u-body u-xl-mode" data-lang="en"><header class=" u-border-no-bottom u-border-no-left u-border-no-right u-border-no-top u-clearfix u-header u-section-row-container" id="sec-ce85" style="background-image: none"><div class="u-section-rows">
         <div class="u-section-row" id="sec-6fdb">
           
@@ -77,20 +105,19 @@
                   <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                 </div>
               </div>
-              <div class="u-form-date u-form-group u-label-top u-form-group-3">
+              <div id="fromDate" class="u-form-date u-form-group u-label-top u-form-group-3">
                 <label for="date-f412" class="u-custom-font u-font-source-sans-pro u-label u-label-3">From</label>
                 <input type="text" readonly="readonly" placeholder="MM/DD/YYYY" id="date-f412" name="date" class="u-border-3 u-border-black u-gradient u-input u-input-rectangle u-radius-10 u-input-3" required="" data-date-format="mm/dd/yyyy">
               </div>
-              <div class="u-form-date u-form-group u-label-top u-form-group-4">
+              <div id="toDate" class="u-form-date u-form-group u-label-top u-form-group-4">
                 <label for="date-bfca" class="u-custom-font u-font-source-sans-pro u-label u-label-4">To</label>
                 <input type="text" readonly="readonly" placeholder="MM/DD/YYYY" id="date-bfca" name="date-1" class="u-border-3 u-border-black u-gradient u-input u-input-rectangle u-radius-10 u-input-4" required="" data-date-format="mm/dd/yyyy">
               </div>
               <div class="u-align-left u-form-group u-form-submit u-label-top">
                 <input type="submit" value="submit" class="u-form-control-hidden">
-                <a href="#" class="u-border-3 u-border-grey-80 u-border-hover-black u-btn u-btn-round u-btn-submit u-button-style u-gradient u-none u-radius-10 u-text-hover-black u-btn-1">Get Attendance</a>
+                <a  onclick="getAttendance()" class="u-border-3 u-border-grey-80 u-border-hover-black u-btn u-btn-round u-btn-submit u-button-style u-gradient u-none u-radius-10 u-text-hover-black u-btn-1">Get Attendance</a>
               </div>
-              <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-              <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
+             
               <input type="hidden" value="" name="recaptchaResponse">
               <input type="hidden" name="formServices" value="1a0f2ce9d956c64b989a64b9e046fe4c">
             </form>
@@ -106,11 +133,10 @@
                 <input type="text" readonly="readonly" placeholder="MM/DD/YYYY" id="date-8ddc" name="date-1" class="u-border-3 u-border-black u-custom-font u-font-source-sans-pro u-gradient u-input u-input-rectangle u-none u-radius-10 u-input-6" required="" data-date-format="mm/dd/yyyy">
               </div>
               <div class="u-align-left u-form-group u-form-submit u-label-top">
-                <a href="#" class="u-border-3 u-border-grey-75 u-border-hover-black u-btn u-btn-round u-btn-submit u-button-style u-custom-font u-font-source-sans-pro u-gradient u-none u-radius-10 u-text-hover-black u-btn-2">Download</a>
+                <a onclick="downloadCSV()" class="u-border-3 u-border-grey-75 u-border-hover-black u-btn u-btn-round u-btn-submit u-button-style u-custom-font u-font-source-sans-pro u-gradient u-none u-radius-10 u-text-hover-black u-btn-2">Download</a>
                 <input type="submit" value="submit" class="u-form-control-hidden">
               </div>
-              <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-              <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
+              
               <input type="hidden" value="" name="recaptchaResponse">
               <input type="hidden" name="formServices" value="1a0f2ce9d956c64b989a64b9e046fe4c">
             </form>
@@ -118,7 +144,7 @@
           <p class="u-custom-font u-font-source-sans-pro u-text u-text-default u-text-1">Check Attendance</p>
         </div>
       </div>
-      <div class="u-border-3 u-border-black u-expanded-width-sm u-expanded-width-xs u-radius-10 u-shape u-shape-round u-shape-1"></div>
+      <div id ="tableContainer" class="u-border-3 u-border-black u-expanded-width-sm u-expanded-width-xs u-radius-10 u-shape u-shape-round u-shape-1"></div>
     </section>
     
     
