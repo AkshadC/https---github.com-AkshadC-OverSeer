@@ -446,13 +446,8 @@ function teacherVerifyOTP() {
 }
 
 function getAttendance() {
-
-
   const keyRef = firebase.database().ref('Attendance/CE/BE');
-
   const headers = [];
-
-
   keyRef.once('value')
     .then((snapshot) => {
       const data = snapshot.val();
@@ -469,9 +464,6 @@ function getAttendance() {
       });
 
       displayFurther(headers);
-
-
-
     });
 
 }
@@ -654,6 +646,9 @@ function downloadFurther(headers) {
     subMap = value;
   });
 
+
+
+
   keyRef2.once('value', (snapshot) => {
     const data = snapshot.val();
 
@@ -662,44 +657,65 @@ function downloadFurther(headers) {
       return { 'OVERSEER': headers[index], ...data[key] };
     });
     const tempData = newData;
-    const parsedDataa = Object.values(newData).map(obj => Object.values(obj));
-    const firstROW = Object.keys(newData[0]);
     
-    firstROW.push("Attendance_Percentage");
-    console.log(firstROW);
-    for (let i = 0; i < parsedDataa.length; i++) {
-      const row = parsedDataa[i];
-      for(var j = 1; j<row.length;j++){
-        if(Array.isArray(row[j])){
 
+    const parsedData1 = Object.values(tempData).map(obj => Object.values(obj));
+
+    var individual = [];
+    for (var i = 0; i < parsedData1.length; i++) {
+      var ele = parsedData1[i];
+      var countMap= { "HPC":0,"EL5":0,"EL6":0,"DL":0};
+      for (var j = 0; j < ele.length; j++) {
+        
+        if (Array.isArray(ele[j])) {
+          var element = ele[j];
+          
+          for (var k = 0; k < element.length; k++) {
+            var subElement = element[k];
+
+            if(subElement !="NA"){
+              countMap[subElement] = (countMap[subElement] || 0) + 1;
+            };
+          }
+        } 
+      }
+      individual.push(countMap);
+    }
+    
+    var final = [];
+    for(var i = 0; i < individual.length; i++){
+      
+      var ele = individual[i];
+      var res = "";
+      for (var key in ele) {
+        if (ele.hasOwnProperty(key)) {
+
+          var value = ele[key];
+
+          for(var subject in subMap){
+
+            var total = subMap[subject];
+            if(key===subject){
+              res = res + key + ': ' + (value/total)*100 + "% ";
+            }
+          }
         }
       }
-      row.push(count.toString());
+      final.push(res);
     }
-    console.log(parsedDataa);
-    parsedData.unshift(firstROW);
 
-    var value;
-
-    subRef.once('value',(snapshot)=> {
-      value = snapshot.val();
-    
-      localStorage.setItem('value', value);
-
-    });
-
-    parsedData.slice(1).forEach(function (row) {
-      var lastColumnIndex = row.length - 1;
-      row[lastColumnIndex] = (row[lastColumnIndex] / parseInt(localStorage.getItem('value'))) * 100 + "%";
-    });
-
+    for (var i = 0; i < parsedData1.length; i++) {
+      parsedData1[i].push(final[i]);
+    }
+    const firstROWALL = Object.keys(newData[0]);
+    firstROWALL.push("All Subject % \n for the given range");
+    parsedData1.unshift(firstROWALL);
+    downloadcsv(Papa.unparse(parsedData1),'NEW.csv');
   });
 }
 function downloadcsv(csv, filename) {
-
   const csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-
-  if (navigator.msSaveBlob) { // IE 10+
+  if (navigator.msSaveBlob) { 
     navigator.msSaveBlob(csvData, filename);
   } else {
     const link = document.createElement('a');
@@ -709,67 +725,9 @@ function downloadcsv(csv, filename) {
     link.click();
     document.body.removeChild(link);
   }
-
 }
+
 function editStudentDetails() {
 
-  const parsedData1 = Object.values(tempData).map(obj => Object.values(obj));
 
-  var individual = [];
-  for (var i = 0; i < parsedData1.length; i++) {
-    var ele = parsedData1[i];
-    var countMap= { "HPC":0,"EL5":0,"EL6":0,"DL":0};
-    for (var j = 0; j < ele.length; j++) {
-      
-      if (Array.isArray(ele[j])) {
-        var element = ele[j];
-        
-        for (var k = 0; k < element.length; k++) {
-          var subElement = element[k];
-
-          if(subElement !="NA"){
-            countMap[subElement] = (countMap[subElement] || 0) + 1;
-          };
-        }
-      } 
-    }
-    individual.push(countMap);
-  }
-  
-  var final = [];
-  for(var i = 0; i < individual.length; i++){
-    
-    var ele = individual[i];
-    var res = "";
-    for (var key in ele) {
-      if (ele.hasOwnProperty(key)) {
-
-        var value = ele[key];
-
-        for(var subject in subMap){
-
-          var total = subMap[subject];
-          if(key===subject){
-            res = res + key + ': ' + (value/total)*100 + "% ";
-          }
-        }
-      }
-    }
-    final.push(res);
-  }
-
-  for (var i = 0; i < parsedData1.length; i++) {
-    parsedData1[i].push(final[i]);
-    
-  }
-  
-  const firstROWALL = Object.keys(newData[0]);
-  firstROWALL.push("All Subject % \n for the given range");
-  parsedData1.unshift(firstROWALL);
-  const csv1 = Papa.unparse(parsedData);
-  console.log(parsedData);
-  const csv2 = Papa.unparse(parsedData1); 
-  const mergedCsv = `${csv1}\n\n${csv2}`;
-  console.log(mergedCsv);
-  //downloadcsv(mergedCsv,'NEW.csv');
 }
