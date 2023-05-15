@@ -456,9 +456,6 @@ function getAttendance() {
       const dataArray = Object.keys(data).map((key) => {
         return data[key];
       });
-
-
-
       Object.keys(dataArray[0]).forEach(header => {
         headers.push(header);
       });
@@ -467,6 +464,7 @@ function getAttendance() {
     });
 
 }
+
 function displayFurther(headers) {
 
   var year = document.getElementById("select-0cf8").value;
@@ -474,133 +472,201 @@ function displayFurther(headers) {
   var fromDate = document.getElementById("date-f412").value;
   var toDate = document.getElementById("date-bfca").value;
   var sub = localStorage.getItem("TeacherSubject");
-  const keyRef2 = firebase.database().ref('Attendance/CE/BE/B');
 
+  const keyRef2 = firebase.database().ref('Attendance/CE/BE/B');
+  const subjects = firebase.database().ref('Subjects/BE/CE/B/');
+  var subMap;
+  subjects.once('value', (snapshot) => {
+    const value = snapshot.val();
+    subMap = value;
+  });
   keyRef2.once('value', (snapshot) => {
     const data = snapshot.val();
-
-
     const newData = Object.keys(data).map((key, index) => {
       return { 'OVERSEER': headers[index], ...data[key] };
     });
-
-
     for (let i = 0; i < newData.length; i++) {
-
       const data = newData[i];
       for (const key in data) {
         if (key != "OVERSEER") {
           for (const k in data[key]) {
-
-            if (data[key][k] != "EL5") {
-
-              data[key][k] = "  ";
-            }
           }
         }
-
       }
     }
 
-    const parsedData = Papa.parse(Papa.unparse(newData), { header: true });
-
-    const [month1, day1, year1] = fromDate.split('/');
-    const date1 = new Date(`${month1}-${day1}-${year1}`);
-
-    const [month2, day2, year2] = toDate.split('/');
-    const date2 = new Date(`${month2}-${day2}-${year2}`);
-
-    const convertedDateString1 = `${date1.getFullYear()}-${String(date1.getMonth() + 1).padStart(2, '0')}-${String(date1.getDate()).padStart(2, '0')}`;
-    const convertedDateString2 = `${date2.getFullYear()}-${String(date2.getMonth() + 1).padStart(2, '0')}-${String(date2.getDate()).padStart(2, '0')}`;
-
-
-
-    const minDate = new Date(convertedDateString1);
-    const maxDate = new Date(convertedDateString2);
-
-    parsedData.meta.fields.forEach(field => {
-
-
-      const colDate = new Date(field);
-      if (colDate > maxDate) {
-        const columnIndex = parsedData.meta.fields.indexOf(field);
-
-        // Delete the column from the data
-        parsedData.data.forEach(row => {
-          delete row[field];
-        });
-
-        // Remove the column name from the header
-        parsedData.meta.fields.splice(columnIndex, 1);
-      }
-      else if (colDate < minDate) {
-        const columnIndex = parsedData.meta.fields.indexOf(field);
-
-        // Delete the column from the data
-        parsedData.data.forEach(row => {
-          delete row[field];
-        });
-
-        parsedData.meta.fields.splice(columnIndex, 1);
-      }
-    });
-
-
-    const parsedObject = Papa.parse(Papa.unparse(parsedData));
-    const rows = parsedObject.data;
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      for (let j = 0; j < row.length; j++) {
-        const value = row[j];
-        const newValue = value.replace(/,/g, ' ');
-        row[j] = newValue;
-      }
+    const final = calcTotalPercentageForGivenRange(newData, fromDate, toDate, subMap);
+    if (final === 0) {
+      showAlert("NO DATA FOUND, Please Try again", "error", "Check_Attendance_Teacher.html", "Oops!", "#FF2E2E");
     }
+    else {
+      headers.unshift("OVERSEER");
+      const firstCol = "ATTENDANCE % For the Given Range: " + fromDate + " -> " + toDate + "  ";
+      final.unshift(firstCol);
+
+      var mergedData = headers.map((value, index) => ({
+        column1: value,
+        column2: final[index]
+      }));
 
 
-    const tableDiv = document.getElementById('tableContainer');
-    tableDiv.style.top = '50px';
-    tableDiv.style.margin = '0 auto';
-    tableDiv.innerHTML = '';
+      mergedData = Papa.parse(Papa.unparse(mergedData));
+      const rows = mergedData.data;
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        for (let j = 1; j < row.length; j++) {
+          const value = row[j];
+          const newValue = value.replace(/,/g, ' ');
+          row[j] = newValue;
+        }
+      }
 
-    const table = document.createElement('table');
-    tableDiv.style.width = "1000px";
-    tableDiv.style.height = "500px";
-    table.style.borderCollapse = 'collapse';
-    rows.forEach(row => {
-      const tableRow = table.insertRow();
-      Object.values(row).forEach(value => {
-        const td = document.createElement('td');
-        td.textContent = value;
-        td.style.border = '1px solid black';
-        td.style.padding = '5px';
-        tableRow.appendChild(td);
+      const tableDiv = document.getElementById('tableContainer');
+      tableDiv.style.top = '50px';
+      tableDiv.style.margin = '0 auto';
+      tableDiv.innerHTML = '';
+
+      const table = document.createElement('table');
+      tableDiv.style.width = "720px";
+      tableDiv.style.height = "500px";
+      table.style.borderCollapse = 'collapse';
+      rows.slice(1).forEach(row => {
+        const tableRow = table.insertRow();
+        Object.values(row).forEach(value => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          td.style.border = '1px solid black';
+          td.style.padding = '5px';
+          tableRow.appendChild(td);
+        });
       });
-    });
-    table.style.borderCollapse = 'collapse';
-    table.style.border = '2px solid black';
+      table.style.borderCollapse = 'collapse';
+      table.style.border = '2px solid black';
 
-    table.style.overflow = 'auto';
+      table.style.overflow = 'auto';
 
-    // Set the cell styles
-    const cells = table.querySelectorAll('td, th');
-    cells.forEach(cell => {
-      cell.style.border = '2px solid black';
-      cell.style.padding = '8px';
-      cell.style.textAlign = 'center';
-    });
-    table.style.backgroundColor = 'white';
-    table.style.width = tableDiv.offsetWidth + "px";
-    table.style.height = tableDiv.offsetHeight + "px";
-    tableDiv.style.overflow = "auto";
-    tableDiv.appendChild(table);
-    window.scrollBy(0, 300);
+
+      const cells = table.querySelectorAll('td, th');
+      cells.forEach(cell => {
+        cell.style.border = '2px solid black';
+        cell.style.padding = '8px';
+        cell.style.textAlign = 'center';
+      });
+      table.style.backgroundColor = 'white';
+      table.style.width = tableDiv.offsetWidth + "px";
+      table.style.height = tableDiv.offsetHeight + "px";
+      tableDiv.style.overflow = "auto";
+
+      const s = table.querySelectorAll("tr > td:first-child");
+      s.forEach((cell) => {
+        cell.style.fontWeight = "bold";
+      });
+      table.rows[0].style.fontWeight = "bold";
+      tableDiv.appendChild(table);
+      window.scrollBy(0, 300);
+    }
+
 
   });
 
 }
 
+function calcTotalPercentageForGivenRange(newData, fromDate, toDate, subMap) {
 
+  const parsedData = Papa.parse(Papa.unparse(newData), { header: true });
+
+  const [month1, day1, year1] = fromDate.split('/');
+  const date1 = new Date(`${month1}-${day1}-${year1}`);
+
+  const [month2, day2, year2] = toDate.split('/');
+  const date2 = new Date(`${month2}-${day2}-${year2}`);
+
+  const convertedDateString1 = `${date1.getFullYear()}-${String(date1.getMonth() + 1).padStart(2, '0')}-${String(date1.getDate()).padStart(2, '0')}`;
+  const convertedDateString2 = `${date2.getFullYear()}-${String(date2.getMonth() + 1).padStart(2, '0')}-${String(date2.getDate()).padStart(2, '0')}`;
+
+
+
+  const minDate = new Date(convertedDateString1);
+  const maxDate = new Date(convertedDateString2);
+  const validColIndices = [];
+  const invalidColDates = [];
+  parsedData.meta.fields.forEach(field => {
+
+
+    if (field != "OVERSEER") {
+      const colDate = new Date(field);
+      if (colDate <= maxDate && colDate >= minDate) {
+        validColIndices.push(parsedData.meta.fields.indexOf(field));
+      }
+    }
+
+  });
+
+  if (validColIndices.length != 0) {
+    parsedData.meta.fields.slice(1).forEach(field => {
+      const index = parsedData.meta.fields.indexOf(field);
+
+      if (!validColIndices.includes(index)) {
+        invalidColDates.push(field);
+      }
+    }
+    );
+  }
+  const parsedData1 = newData;
+  var individual = [];
+  for (var i = 0; i < parsedData1.length; i++) {
+    var ele = parsedData1[i];
+
+    var countMap = { "HPC": 0, "EL5": 0, "EL6": 0, "DL": 0 };
+    Object.keys(ele).forEach(key => {
+
+      if (Array.isArray(ele[key])) {
+        const list = ele[key];
+        for (var k = 0; k < list.length; k++) {
+          var subElement = list[k];
+
+          if (!invalidColDates.includes(key) && validColIndices.length != 0) {
+            if (subElement != "NA" && countMap.hasOwnProperty(subElement)) {
+              countMap[subElement] = (countMap[subElement] || 0) + 1;
+            };
+          }
+
+        }
+      }
+    }
+
+    );
+    individual.push(countMap);
+  }
+  var final = [];
+  for (var i = 0; i < individual.length; i++) {
+
+    var ele = individual[i];
+    var res = "-- ";
+    for (var key in ele) {
+      if (ele.hasOwnProperty(key)) {
+
+        var value = ele[key];
+
+        for (var subject in subMap) {
+
+          var total = subMap[subject];
+          if (key === subject) {
+            res = res + key + ': ' + (value / total) * 100 + "% --";
+          }
+        }
+      }
+    }
+    final.push(res);
+  }
+  if (validColIndices.length === 0) {
+    return 0;
+  }
+  else {
+    return final;
+  }
+
+}
 
 
 function downloadCSV() {
@@ -614,13 +680,9 @@ function downloadCSV() {
     .then((snapshot) => {
       const data = snapshot.val();
 
-      // Convert the data into an array of objects
       const dataArray = Object.keys(data).map((key) => {
         return data[key];
       });
-
-
-
       Object.keys(dataArray[0]).forEach(header => {
         headers.push(header);
       });
@@ -641,13 +703,10 @@ function downloadFurther(headers) {
   const subRef = firebase.database().ref(path);
 
   var subMap;
-  subjects.once('value',(snapshot)=>{
+  subjects.once('value', (snapshot) => {
     const value = snapshot.val();
     subMap = value;
   });
-
-
-
 
   keyRef2.once('value', (snapshot) => {
     const data = snapshot.val();
@@ -656,66 +715,32 @@ function downloadFurther(headers) {
     const newData = Object.keys(data).map((key, index) => {
       return { 'OVERSEER': headers[index], ...data[key] };
     });
-    const tempData = newData;
-    
 
-    const parsedData1 = Object.values(tempData).map(obj => Object.values(obj));
 
-    var individual = [];
-    for (var i = 0; i < parsedData1.length; i++) {
-      var ele = parsedData1[i];
-      var countMap= { "HPC":0,"EL5":0,"EL6":0,"DL":0};
-      for (var j = 0; j < ele.length; j++) {
-        
-        if (Array.isArray(ele[j])) {
-          var element = ele[j];
-          
-          for (var k = 0; k < element.length; k++) {
-            var subElement = element[k];
 
-            if(subElement !="NA"){
-              countMap[subElement] = (countMap[subElement] || 0) + 1;
-            };
-          }
-        } 
-      }
-      individual.push(countMap);
+    const validData = returnValidData(newData, fromDate, toDate);
+    if (validData === 0) {
+      showAlert("NO DATA FOUND, Please Try again", "error", "Check_Attendance_Teacher.html", "Oops!", "#FF2E2E");
     }
-    
-    var final = [];
-    for(var i = 0; i < individual.length; i++){
-      
-      var ele = individual[i];
-      var res = "";
-      for (var key in ele) {
-        if (ele.hasOwnProperty(key)) {
+    else {
+      const final = calcTotalPercentageForGivenRange(newData, fromDate, toDate, subMap);
 
-          var value = ele[key];
+      const firstCol = "ATTENDANCE % For the Given Range: " + fromDate + " -> " + toDate + "  ";
+      final.unshift(firstCol);
 
-          for(var subject in subMap){
+      const hmm = Papa.parse(Papa.unparse(validData["data"]))["data"];
 
-            var total = subMap[subject];
-            if(key===subject){
-              res = res + key + ': ' + (value/total)*100 + "% ";
-            }
-          }
-        }
-      }
-      final.push(res);
+      hmm.forEach((row, index) => {
+        row.push(final[index]);
+      });
+      downloadcsv(Papa.unparse(hmm), 'NEW.csv');
     }
 
-    for (var i = 0; i < parsedData1.length; i++) {
-      parsedData1[i].push(final[i]);
-    }
-    const firstROWALL = Object.keys(newData[0]);
-    firstROWALL.push("All Subject % \n for the given range");
-    parsedData1.unshift(firstROWALL);
-    downloadcsv(Papa.unparse(parsedData1),'NEW.csv');
   });
 }
 function downloadcsv(csv, filename) {
   const csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  if (navigator.msSaveBlob) { 
+  if (navigator.msSaveBlob) {
     navigator.msSaveBlob(csvData, filename);
   } else {
     const link = document.createElement('a');
@@ -727,7 +752,56 @@ function downloadcsv(csv, filename) {
   }
 }
 
-function editStudentDetails() {
+function returnValidData(newData, fromDate, toDate) {
+  const parsedData = Papa.parse(Papa.unparse(newData), { header: true });
 
+  const [month1, day1, year1] = fromDate.split('/');
+  const date1 = new Date(`${month1}-${day1}-${year1}`);
+
+  const [month2, day2, year2] = toDate.split('/');
+  const date2 = new Date(`${month2}-${day2}-${year2}`);
+
+  const convertedDateString1 = `${date1.getFullYear()}-${String(date1.getMonth() + 1).padStart(2, '0')}-${String(date1.getDate()).padStart(2, '0')}`;
+  const convertedDateString2 = `${date2.getFullYear()}-${String(date2.getMonth() + 1).padStart(2, '0')}-${String(date2.getDate()).padStart(2, '0')}`;
+
+
+
+  const minDate = new Date(convertedDateString1);
+  const maxDate = new Date(convertedDateString2);
+  const validColIndices = [];
+
+  const invalidColDates = [];
+  parsedData.meta.fields.forEach(field => {
+
+    if (field != "OVERSEER") {
+      const colDate = new Date(field);
+      if (colDate <= maxDate && colDate >= minDate) {
+
+        validColIndices.push(parsedData.meta.fields.indexOf(field));
+      }
+    }
+
+  });
+
+
+  parsedData.meta.fields.forEach(field => {
+    const index = parsedData.meta.fields.indexOf(field);
+
+    if (!validColIndices.includes(index) && index != 0) {
+
+      invalidColDates.push(field);
+    }
+  });
+  invalidColDates.forEach(field => {
+    parsedData.data.forEach(row => {
+      delete row[field];
+    });
+  })
+  if (validColIndices.length === 0) {
+    return 0;
+  }
+  else {
+    return parsedData;
+  }
 
 }
