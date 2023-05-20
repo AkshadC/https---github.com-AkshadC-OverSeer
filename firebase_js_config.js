@@ -51,6 +51,22 @@ function enrollTeacher() {
 
 
 }
+function enrollAdmin(){
+  const adminDB = firebase.database().ref("Admins/");
+  const newAdmin = {
+
+    FirstName: "Akshad",
+    LastName: "Chidrawar",
+    EmailID: "19510020.dypit@dypvp.edu.in",
+    Age: 25,
+  };
+  var newItemRef = adminDB.child("F1");
+  newItemRef.set(newAdmin);
+}
+
+
+
+
 function deleteFaculty() {
 
   var fID = document.getElementById("name-558c").value;
