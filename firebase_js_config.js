@@ -51,18 +51,6 @@ function enrollTeacher() {
 
 
 }
-function enrollAdmin(){
-  const adminDB = firebase.database().ref("Admins/");
-  const newAdmin = {
-
-    FirstName: "Akshad",
-    LastName: "Chidrawar",
-    EmailID: "19510020.dypit@dypvp.edu.in",
-    Age: 25,
-  };
-  var newItemRef = adminDB.child("F1");
-  newItemRef.set(newAdmin);
-}
 
 
 
@@ -460,6 +448,83 @@ function teacherVerifyOTP() {
     document.getElementById("email-F").value = "";
   }
 }
+function uploadFacultyImage(){
+  var fileInput = document.getElementById('file-input');
+  
+  var file = fileInput.files[0];
+
+  // Create a storage reference to the desired folder
+  var folderRef = firebase.storage().ref().child('FacultyPP');
+  
+  // Create a unique filename for the uploaded file
+  var filename = document.getElementById('Fname-a001').value +"_"+ document.getElementById('Lname-a001').value;
+  
+  // Create a reference to the file in the desired folder
+  var fileRef = folderRef.child(filename);
+  
+  // Upload the file to Firebase Storage
+  var uploadTask = fileRef.put(file);
+
+  uploadTask.on(
+    'state_changed',
+    function(snapshot) {
+      // Handle upload progress, if needed
+    },
+    function(error) {
+      // Handle upload error, if any
+      console.log('Upload failed: ' + error);
+    },
+    function() {
+      // Handle successful upload completion
+      showAlert("IMAGE UPLOADED SUCCESSFULLY", "success", "", "Success!", "#AAFF00")
+    }
+  );
+}
+function uploadStudentImage(){
+  var fileInput = document.getElementById('file-input');
+  
+  var file = fileInput.files[0];
+  const radioButtons = document.querySelectorAll('input[type="radio"]');
+  let selectedValue;
+
+  for (const radioButton of radioButtons) {
+    if (radioButton.checked) {
+      selectedValue = radioButton.value;
+      break;
+    }
+  }
+  var div = document.getElementById("text-aaed").value;
+  var year = selectedValue;
+  var dept = document.getElementById("select-2d99").value;
+  // Create a storage reference to the desired folder
+  var folderPath = dept+"/"+year+"/"+div;
+  var folderRef = firebase.storage().ref().child(folderPath);
+  
+  // Create a unique filename for the uploaded file
+  var filename = document.getElementById('Fname-49a7').value +"_"+ document.getElementById('Lname-49a7').value;
+  
+  // Create a reference to the file in the desired folder
+  var fileRef = folderRef.child(filename);
+  
+  // Upload the file to Firebase Storage
+  var uploadTask = fileRef.put(file);
+
+  uploadTask.on(
+    'state_changed',
+    function(snapshot) {
+      // Handle upload progress, if needed
+    },
+    function(error) {
+      // Handle upload error, if any
+      console.log('Upload failed: ' + error);
+    },
+    function() {
+      // Handle successful upload completion
+      showAlert("IMAGE UPLOADED SUCCESSFULLY", "success", "", "Success!", "#AAFF00")
+    }
+  );
+}
+
 
 function getAttendance() {
   const keyRef = firebase.database().ref('Attendance/CE/BE');
@@ -488,7 +553,7 @@ function displayFurther(headers) {
   var fromDate = document.getElementById("date-f412").value;
   var toDate = document.getElementById("date-bfca").value;
   var sub = localStorage.getItem("TeacherSubject");
-
+  var dept = document.getElementById("select-680d").value;
   const keyRef2 = firebase.database().ref('Attendance/CE/BE/B');
   const subjects = firebase.database().ref('Subjects/BE/CE/B/');
   var subMap;
@@ -707,6 +772,7 @@ function downloadCSV() {
 }
 
 function downloadFurther(headers) {
+  var dept = document.getElementById("select-680d").value;
   var year = document.getElementById("select-0cf8").value;
   var division = document.getElementById("select-14e7").value;
   var fromDate = document.getElementById("date-325e").value;

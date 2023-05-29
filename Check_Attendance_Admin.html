@@ -28,17 +28,39 @@
     <meta property="og:title" content="Check_Attendance_Admin">
     <meta property="og:type" content="website">
     <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-
+    <script src="firebase_js_config.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+    <!-- Add additional services you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-functions.js"></script>
+    <script src="PapaParse/papaparse.js"></script>
+    <script src="PapaParse/papaparse.min.js"></script>
+  
+    <script>
+   
+  
+        // Initialize Firebase
+        // TODO: Replace with your project's customized code snippet
+        var config = {
+          apiKey: "AIzaSyBU2Ew2SWajCz3HrEQ9-nLQ2OgWLJertNc",
+          authDomain: "beprojecttrial.firebaseapp.com",
+          databaseURL: "https://beprojecttrial-default-rtdb.firebaseio.com/",
+          projectId: "beprojecttrial",
+          storageBucket: "beprojecttrial.appspot.com",
+          messagingSenderId: "566408762089",
+        };
+        firebase.initializeApp(config);
+      </script>
   <body class="u-body u-xl-mode" data-lang="en"><header class="
       u-border-no-bottom u-border-no-left u-border-no-right u-border-no-top
       u-clearfix u-header u-section-row-container" id="sec-ce85"
       style="background-image: none"><div class="u-section-rows">
         <div class="u-section-row" id="sec-6fdb">
-
-
-
-
-
           <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
             <a href="Admin_Login.html" class="u-image u-logo u-image-1"
               data-image-width="128" data-image-height="128">
@@ -50,11 +72,6 @@
           data-animation-duration="0" data-animation-delay="0"
           data-animation-direction="" id="sec-b391">
           <div class="u-clearfix u-sheet u-sheet-2"></div>
-
-
-
-
-
         </div>
       </div></header>
     <section class="u-clearfix u-section-1" id="sec-79f5"><span
@@ -64,9 +81,9 @@
         u-group-1">
         <div class="u-container-layout u-valign-bottom u-container-layout-1">
           <p class="u-custom-font u-font-source-sans-pro u-text u-text-default
-            u-text-1">Check Attendance</p>
+            u-text-1">Get Attendance</p>
           <div class="u-form u-form-1">
-            <form action="https://forms.nicepagesrv.com/v2/form/process"
+            <form action=""
               class="u-clearfix u-form-horizontal u-form-spacing-11
               u-inner-form" source="email" name="form" style="padding: 23px;">
               <div class="u-form-group u-form-select u-label-top
@@ -153,18 +170,12 @@
                 u-label-top">
                 <input type="submit" value="submit"
                   class="u-form-control-hidden">
-                <a href="#" class="u-border-3 u-border-grey-75
+                <a onclick="getAttendance()" class="u-border-3 u-border-grey-75
                   u-border-hover-black u-btn u-btn-round u-btn-submit
                   u-button-style u-gradient u-none u-radius-10
                   u-text-hover-black u-btn-1">Get Attendance</a>
               </div>
-              <div class="u-form-send-message u-form-send-success"> Thank you!
-                Your message has been sent. </div>
-              <div class="u-form-send-error u-form-send-message"> Unable to send
-                your message. Please fix errors then try again. </div>
-              <input type="hidden" value="" name="recaptchaResponse">
-              <input type="hidden" name="formServices"
-                value="1a0f2ce9d956c64b989a64b9e046fe4c">
+             
             </form>
           </div>
           <div class="u-form u-form-2">
@@ -197,13 +208,7 @@
                 <input type="submit" value="submit"
                   class="u-form-control-hidden">
               </div>
-              <div class="u-form-send-message u-form-send-success"> Thank you!
-                Your message has been sent. </div>
-              <div class="u-form-send-error u-form-send-message"> Unable to send
-                your message. Please fix errors then try again. </div>
-              <input type="hidden" value="" name="recaptchaResponse">
-              <input type="hidden" name="formServices"
-                value="1a0f2ce9d956c64b989a64b9e046fe4c">
+              
             </form>
           </div>
         </div>

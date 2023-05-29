@@ -1,5 +1,62 @@
 <!DOCTYPE html>
 <html style="font-size: 16px;" lang="en"><head>
+  <style>
+
+    .upload-box {
+        display: flex;
+        flex-direction: row;
+        font-weight: bold; /* Make text bold */
+
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        border: 3px solid #000; /* Add black border with 3px intensity */
+            border-radius: 9px; 
+            margin-right: 50px;margin: auto; /* Center the div horizontally */
+            margin-top: 20px; /* Add spacing above the div */
+            margin-bottom: 15px; /* Add spacing below the div */
+    }
+
+    .upload-box input[type="file"] {
+        display: none;
+    }
+    .upload-button + .upload-button {
+            margin-left: 10px; /* Add margin top to create space between buttons */
+        }
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+
+    .upload-button {
+            
+            padding: 10px 40px; /* Adjust the padding values to increase button length */
+            background-image: linear-gradient(to right, rgba(74, 239, 227, 0.88), #9af7c3); /* Add linear gradient background */
+            align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+  text-align: center; 
+            
+            border: none;
+            cursor: pointer;
+            height: 48px;
+            border: 3px solid #000; /* Add black border with 3px intensity */
+            border-radius: 5px; 
+    }
+    .upload-button:first-child {
+            margin-bottom: 10px; /* Add a margin bottom to create a gap */
+        }
+        .upload-button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-text {
+            margin-right: 5px; /* Add margin right to create spacing between icon and text */
+        }
+</style>
     <link rel="icon" href="
       https://cdn-icons-png.flaticon.com/512/178/178796.png?w=826&t=st=1679160181~exp=1679160781~hmac=0bd384e7d47c572d266bca6e58fba2bfad9b9c14bc77d72e3c01d37b4ef28fbe">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,6 +95,7 @@
     <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-messaging.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-functions.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-storage.js"></script>
     <script>
  
 
@@ -257,7 +315,15 @@
                     u-gradient u-input u-input-rectangle u-radius-10
                     u-input-12"></select>
                 </div>
+                <section class="container">
+                  <div class="upload-box">
+                    <label for="file-input" class="upload-button">Choose File</label>
+                    <label onclick = "uploadStudentImage()" for="upload-button" class="upload-button">Upload</label>
+                    <input type="file" id="file-input" accept="image/*">
+                  </div>
+                </section>
               </div>
+              
               <div class="u-align-left u-form-group u-form-submit">
                 <a onclick="enrollStudent()" class="u-border-3 u-border-grey-75
                   u-border-hover-black u-btn u-btn-round u-btn-submit
@@ -266,6 +332,7 @@
                 <input type="submit" value="submit"
                   class="u-form-control-hidden">
               </div>
+              
             </form>
           </div>
         </div>
