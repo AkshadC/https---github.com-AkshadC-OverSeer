@@ -749,7 +749,36 @@ function calcTotalPercentageForGivenRange(newData, fromDate, toDate, subMap) {
 
 }
 
+function calculateSubjectWiseTotal(To, From){
+  From = "2023-05-23";
+  To = "2023-05-28";
+  const keyRef = firebase.database().ref('TotalSubjectCount/BE/CE/B');
+  const subjects = {};
+  keyRef.once('value').then((snapshot)=>{
+    const value = snapshot.val();
+    
+    const totalSubjects = Object.keys(value).length;
+    for(var i = 0; i < totalSubjects; i++){
+      const key = Object.keys(value)[i];
+      var total = 0;
+      for(var j = 0 ; j < value[key].length;j++){
+        const valuu = value[key][j]
+        if(valuu >= From && valuu <= To){
+          total = total+1;
+        }
+      }
+      subjects[key] = total;
 
+    }
+
+  });
+  return subjects;
+}
+
+function booom(){
+  const value = calculateSubjectWiseTotal("","");
+  console.log(value);
+}
 function downloadCSV() {
 
   const keyRef = firebase.database().ref('Attendance/CE/BE');
