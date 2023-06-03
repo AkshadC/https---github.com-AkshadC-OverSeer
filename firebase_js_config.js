@@ -775,10 +775,7 @@ function calculateSubjectWiseTotal(To, From){
   return subjects;
 }
 
-function booom(){
-  const value = calculateSubjectWiseTotal("","");
-  console.log(value);
-}
+
 function downloadCSV() {
 
   const keyRef = firebase.database().ref('Attendance/CE/BE');
@@ -813,11 +810,7 @@ function downloadFurther(headers) {
   const subjects = firebase.database().ref('Subjects/BE/CE/B/');
   const subRef = firebase.database().ref(path);
 
-  var subMap;
-  subjects.once('value', (snapshot) => {
-    const value = snapshot.val();
-    subMap = value;
-  });
+  var subMap = calculateSubjectWiseTotal(fromDate, toDate);
 
   keyRef2.once('value', (snapshot) => {
     const data = snapshot.val();
