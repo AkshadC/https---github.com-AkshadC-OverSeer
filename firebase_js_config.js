@@ -1,6 +1,4 @@
-
 function enrollTeacher() {
-
   var counterRef = firebase.database().ref("FacultyCounter/myCollectionCounter");
   const teachersDB1 = firebase.database().ref("Faculty");
   var firstName = document.getElementById("Fname-a001").value;
@@ -16,38 +14,44 @@ function enrollTeacher() {
   var zipCode = document.getElementById("Zname-3409").value;
   var country = document.getElementById("country-3409").value;
   var address = street + " " + zipCode + " " + city + " " + country + " ";
-
-  counterRef.transaction(function (currentValue) {
-    return (currentValue || 0) + 1;
-  }, function (error, committed, snapshot) {
-    if (error) {
-      console.log("Transaction failed abnormally!", error);
-    } else if (!committed) {
-      console.log("Transaction aborted because the counter location is null.");
-    } else {
-      // Get the incremented counter value
-      var newCounterValue = snapshot.val();
-      var tName = "F" + newCounterValue;
-      // Add the new item with the incremented counter value as the key
-      var newItemRef = teachersDB1.child(tName);
-      const newteacher = {
-        ID: "F" + newCounterValue,
-        FirstName: firstName,
-        LastName: lastName,
-        EmailID: emailID,
-        Age: age,
-        DOB: DOB,
-        PhoneNo: phoneNo,
-        Subject: subject,
-        Dept: dept,
-        Address: address
-      };
-      newItemRef.set(newteacher);
-      var msg = "NEW FACULTY ADDED SUCCESSFULLY WITH ID " + "(" + "F" + newCounterValue + ")!!";
-      showAlert(msg, "success", "Admin_Login.html", "Sucess", "#AAFF00");
-
-    }
-  });
+  if (emailID.substr(-12) == "dypvp.edu.in"){
+    counterRef.transaction(function (currentValue) {
+      return (currentValue || 0) + 1;
+    }, function (error, committed, snapshot) {
+      if (error) {
+        console.log("Transaction failed abnormally!", error);
+      } else if (!committed) {
+        console.log("Transaction aborted because the counter location is null.");
+      } else {
+        // Get the incremented counter value
+        var newCounterValue = snapshot.val();
+        var tName = "F" + newCounterValue;
+        // Add the new item with the incremented counter value as the key
+        var newItemRef = teachersDB1.child(tName);
+        const newteacher = {
+          ID: "F" + newCounterValue,
+          FirstName: firstName,
+          LastName: lastName,
+          EmailID: emailID,
+          Age: age,
+          DOB: DOB,
+          PhoneNo: phoneNo,
+          Subject: subject,
+          Dept: dept,
+          Address: address
+        };
+        newItemRef.set(newteacher);
+        var msg = "NEW FACULTY ADDED SUCCESSFULLY WITH ID " + "(" + "F" + newCounterValue + ")!!";
+        showAlert(msg, "success", "Admin_Login.html", "Sucess", "#AAFF00");
+  
+      }
+    });
+  }
+  else{
+    showAlert("INVALID EMAIL-ID", "warning", "", "Alert!", "#FF2E2E");
+    document.getElementById("email-0df9").value = "dypvp.edu.in";
+  }
+  
 
 
 }
@@ -234,7 +238,18 @@ function enrollStudentFromTeacher() {
 
   });
 }
+function enrollAdmin(){
+  var dbRef = firebase.database().ref("Admins");
+  var newRef = dbRef.child("A4");
+  const stud = {
+    FirstName: "Gayatri",
+    LastName: "Morey",
+    emailID: "19510281.dypit@dypvp.edu.in",
+    age: 23
+  };
+  newRef.set(stud)
 
+}
 let otp = Math.floor(100000 + Math.random() * 900000);
 
 function AsendOtp() {
@@ -405,20 +420,7 @@ function FSendOtp() {
     showAlert("Not An Official Institute Email ID, Please Try again", "error", "", "Oops!", "#FF2E2E");
     document.getElementById("name-2b50").value = "@dypvp.edu.in";
   }
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
 
 function adminVerifyOTP() {
   var recOTP = document.getElementById("email-2b50").value;
@@ -556,11 +558,8 @@ function displayFurther(headers) {
   var dept = document.getElementById("select-680d").value;
   const keyRef2 = firebase.database().ref('Attendance/CE/BE/B');
   const subjects = firebase.database().ref('Subjects/BE/CE/B/');
-  var subMap;
-  subjects.once('value', (snapshot) => {
-    const value = snapshot.val();
-    subMap = value;
-  });
+
+  var subMap = calculateSubjectWiseTotal(fromDate, toDate);
   keyRef2.once('value', (snapshot) => {
     const data = snapshot.val();
     const newData = Object.keys(data).map((key, index) => {
@@ -578,7 +577,10 @@ function displayFurther(headers) {
 
     const final = calcTotalPercentageForGivenRange(newData, fromDate, toDate, subMap);
     if (final === 0) {
-      showAlert("NO DATA FOUND, Please Try again", "error", "Check_Attendance_Teacher.html", "Oops!", "#FF2E2E");
+      showAlert("NO DATA FOUND, Please Try again", "error", "", "Oops!", "#FF2E2E");
+      //setTimeout(function() {}, 10000);
+      //window.history.back();
+
     }
     else {
       headers.unshift("OVERSEER");
@@ -655,18 +657,12 @@ function displayFurther(headers) {
 function calcTotalPercentageForGivenRange(newData, fromDate, toDate, subMap) {
 
   const parsedData = Papa.parse(Papa.unparse(newData), { header: true });
-
   const [month1, day1, year1] = fromDate.split('/');
   const date1 = new Date(`${month1}-${day1}-${year1}`);
-
   const [month2, day2, year2] = toDate.split('/');
   const date2 = new Date(`${month2}-${day2}-${year2}`);
-
   const convertedDateString1 = `${date1.getFullYear()}-${String(date1.getMonth() + 1).padStart(2, '0')}-${String(date1.getDate()).padStart(2, '0')}`;
   const convertedDateString2 = `${date2.getFullYear()}-${String(date2.getMonth() + 1).padStart(2, '0')}-${String(date2.getDate()).padStart(2, '0')}`;
-
-
-
   const minDate = new Date(convertedDateString1);
   const maxDate = new Date(convertedDateString2);
   const validColIndices = [];
@@ -719,44 +715,53 @@ function calcTotalPercentageForGivenRange(newData, fromDate, toDate, subMap) {
     );
     individual.push(countMap);
   }
+
   var final = [];
   for (var i = 0; i < individual.length; i++) {
 
     var ele = individual[i];
     var res = "-- ";
+    
     for (var key in ele) {
       if (ele.hasOwnProperty(key)) {
 
         var value = ele[key];
-
+        
         for (var subject in subMap) {
-
+          
           var total = subMap[subject];
           if (key === subject) {
-            res = res + key + ': ' + (value / total) * 100 + "% --";
+            const percentage = (value / total) * 100; 
+            res = res + key + ': ' + percentage.toFixed(2) + "% --  ";
+            
           }
+          
         }
       }
     }
     final.push(res);
   }
+ 
   if (validColIndices.length === 0) {
     return 0;
   }
   else {
     return final;
   }
-
 }
 
-function calculateSubjectWiseTotal(To, From){
-  From = "2023-05-23";
-  To = "2023-05-28";
+function calculateSubjectWiseTotal(From, To){
+  From = From.replace(/\//g, "-");
+  To = To.replace(/\//g, "-");
+  var parts1 = From.split("-");
+  var From = parts1[2] + "-" + parts1[0] + "-" + parts1[1];
+  var parts2 = To.split("-");
+  var To = parts2[2] + "-" + parts2[0] + "-" + parts2[1];
+  
   const keyRef = firebase.database().ref('TotalSubjectCount/BE/CE/B');
   const subjects = {};
   keyRef.once('value').then((snapshot)=>{
     const value = snapshot.val();
-    
     const totalSubjects = Object.keys(value).length;
     for(var i = 0; i < totalSubjects; i++){
       const key = Object.keys(value)[i];
@@ -768,21 +773,14 @@ function calculateSubjectWiseTotal(To, From){
         }
       }
       subjects[key] = total;
-
     }
-
   });
   return subjects;
 }
 
-
 function downloadCSV() {
-
   const keyRef = firebase.database().ref('Attendance/CE/BE');
-
   const headers = [];
-
-
   keyRef.once('value')
     .then((snapshot) => {
       const data = snapshot.val();
@@ -867,9 +865,6 @@ function returnValidData(newData, fromDate, toDate) {
 
   const convertedDateString1 = `${date1.getFullYear()}-${String(date1.getMonth() + 1).padStart(2, '0')}-${String(date1.getDate()).padStart(2, '0')}`;
   const convertedDateString2 = `${date2.getFullYear()}-${String(date2.getMonth() + 1).padStart(2, '0')}-${String(date2.getDate()).padStart(2, '0')}`;
-
-
-
   const minDate = new Date(convertedDateString1);
   const maxDate = new Date(convertedDateString2);
   const validColIndices = [];
