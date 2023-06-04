@@ -51,13 +51,7 @@ function enrollTeacher() {
     showAlert("INVALID EMAIL-ID", "warning", "", "Alert!", "#FF2E2E");
     document.getElementById("email-0df9").value = "dypvp.edu.in";
   }
-  
-
-
 }
-
-
-
 
 function deleteFaculty() {
 
@@ -106,8 +100,6 @@ function showAlert(message, icon, fun, title, color) {
   else {
     swal.fire(alertopt);
   }
-
-
 }
 
 function enrollStudent() {
@@ -248,8 +240,8 @@ function enrollAdmin(){
     age: 23
   };
   newRef.set(stud)
-
 }
+
 let otp = Math.floor(100000 + Math.random() * 900000);
 
 function AsendOtp() {
@@ -286,7 +278,6 @@ function AsendOtp() {
                 }
                 else if (key === 'PhoneNo') {
                   localStorage.setItem('APhoneNoDescription', childSnapshot.val());
-
                 }
                 else if (key === 'Address') {
                   localStorage.setItem('AAddressDescription', childSnapshot.val());
@@ -327,10 +318,7 @@ function AsendOtp() {
     showAlert("Not An Official Institute Email ID, Please Try again", "error", "", "Oops!", "#FF2E2E");
     document.getElementById("name-2b50").value = "@dypvp.edu.in";
   }
-
-
 }
-
 
 function FSendOtp() {
   var TO = document.getElementById("name-F").value;
@@ -534,8 +522,6 @@ function getAttendance() {
   keyRef.once('value')
     .then((snapshot) => {
       const data = snapshot.val();
-
-      // Convert the data into an array of objects
       const dataArray = Object.keys(data).map((key) => {
         return data[key];
       });
@@ -578,8 +564,6 @@ function displayFurther(headers) {
     const final = calcTotalPercentageForGivenRange(newData, fromDate, toDate, subMap);
     if (final === 0) {
       showAlert("NO DATA FOUND, Please Try again", "error", "", "Oops!", "#FF2E2E");
-      //setTimeout(function() {}, 10000);
-      //window.history.back();
 
     }
     else {
