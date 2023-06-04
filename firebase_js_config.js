@@ -555,7 +555,7 @@ function displayFurther(headers) {
   var fromDate = document.getElementById("date-f412").value;
   var toDate = document.getElementById("date-bfca").value;
   var sub = localStorage.getItem("TeacherSubject");
-  var dept = document.getElementById("select-680d").value;
+  var dept;
   const keyRef2 = firebase.database().ref('Attendance/CE/BE/B');
   const subjects = firebase.database().ref('Subjects/BE/CE/B/');
 
